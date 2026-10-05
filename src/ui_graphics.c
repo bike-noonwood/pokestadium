@@ -194,64 +194,64 @@ Gfx D_8006F798[] = {
 
 static s32 pad_D_8006F7C0[] = { 0, 0, 0, 0 };
 
-void Ui_DrawTexturedRect8x8(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8* arg4) {
-    s32 sp34 = (arg2 < 9) ? 0x400 : 0;
-    s32 sp30 = (arg3 < 9) ? 0x400 : 0;
+void Ui_DrawTexturedRect8x8(s32 x1, s32 y1, s32 width, s32 height, u8* texture) {
+    s32 texture_step_x = (width < 9) ? 0x400 : 0;
+    s32 texture_step_y = (height < 9) ? 0x400 : 0;
 
-    gDPLoadTextureBlock(gDisplayListHead++, arg4, G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 8, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+    gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 8, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                         G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
-    Gfx_DrawTexturedRectClipped(arg0, arg1, arg2, arg3, 0, 0, sp34, sp30, 0);
+    Gfx_DrawTexturedRectClipped(x1, y1, width, height, 0, 0, texture_step_x, texture_step_y, 0);
 }
 
-void Ui_DrawBorderStyleA(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    Ui_DrawTexturedRect8x8(arg0, arg1, 8, 8, D_10027D0);
-    Ui_DrawTexturedRect8x8(arg0, (arg1 + arg3) - 8, 8, 8, D_1002850);
-    Ui_DrawTexturedRect8x8((arg0 + arg2) - 8, (arg1 + arg3) - 8, 8, 8, D_10028D0);
-    Ui_DrawTexturedRect8x8((arg0 + arg2) - 8, arg1, 8, 8, D_1002950);
+void Ui_DrawBorderStyleA(s32 x1, s32 y1, s32 border_x, s32 border_y) {
+    Ui_DrawTexturedRect8x8(x1, y1, 8, 8, D_10027D0);
+    Ui_DrawTexturedRect8x8(x1, (y1 + border_y) - 8, 8, 8, D_1002850);
+    Ui_DrawTexturedRect8x8((x1 + border_x) - 8, (y1 + border_y) - 8, 8, 8, D_10028D0);
+    Ui_DrawTexturedRect8x8((x1 + border_x) - 8, y1, 8, 8, D_1002950);
 
-    if (arg2 > 16) {
-        Ui_DrawTexturedRect8x8(arg0 + 8, arg1, arg2 - 0x10, 8, D_10025D0);
-        Ui_DrawTexturedRect8x8(arg0 + 8, (arg1 + arg3) - 8, arg2 - 0x10, 8, D_1002650);
+    if (border_x > 16) {
+        Ui_DrawTexturedRect8x8(x1 + 8, y1, border_x - 0x10, 8, D_10025D0);
+        Ui_DrawTexturedRect8x8(x1 + 8, (y1 + border_y) - 8, border_x - 0x10, 8, D_1002650);
     }
 
-    if (arg3 > 16) {
-        Ui_DrawTexturedRect8x8(arg0, arg1 + 8, 8, arg3 - 0x10, D_10026D0);
-        Ui_DrawTexturedRect8x8((arg0 + arg2) - 8, arg1 + 8, 8, arg3 - 0x10, D_1002750);
-    }
-}
-
-void Ui_DrawBorderStyleB(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    Ui_DrawTexturedRect8x8(arg0, arg1, 8, 8, D_1002BD0);
-    Ui_DrawTexturedRect8x8(arg0, (arg1 + arg3) - 8, 8, 8, D_1002C50);
-    Ui_DrawTexturedRect8x8((arg0 + arg2) - 8, (arg1 + arg3) - 8, 8, 8, D_1002CD0);
-    Ui_DrawTexturedRect8x8((arg0 + arg2) - 8, arg1, 8, 8, D_1002D50);
-
-    if (arg2 > 16) {
-        Ui_DrawTexturedRect8x8(arg0 + 8, arg1, arg2 - 0x10, 8, D_10029D0);
-        Ui_DrawTexturedRect8x8(arg0 + 8, (arg1 + arg3) - 8, arg2 - 0x10, 8, D_1002A50);
-    }
-
-    if (arg3 > 16) {
-        Ui_DrawTexturedRect8x8(arg0, arg1 + 8, 8, arg3 - 0x10, D_1002AD0);
-        Ui_DrawTexturedRect8x8((arg0 + arg2) - 8, arg1 + 8, 8, arg3 - 0x10, D_1002B50);
+    if (border_y > 16) {
+        Ui_DrawTexturedRect8x8(x1, y1 + 8, 8, border_y - 0x10, D_10026D0);
+        Ui_DrawTexturedRect8x8((x1 + border_x) - 8, y1 + 8, 8, border_y - 0x10, D_1002750);
     }
 }
 
-void Ui_DrawBorderStyleC(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    Ui_DrawTexturedRect8x8(arg0, arg1, 8, 8, D_1002FD0);
-    Ui_DrawTexturedRect8x8(arg0, (arg1 + arg3) - 8, 8, 8, D_1003050);
-    Ui_DrawTexturedRect8x8((arg0 + arg2) - 8, (arg1 + arg3) - 8, 8, 8, D_10030D0);
-    Ui_DrawTexturedRect8x8((arg0 + arg2) - 8, arg1, 8, 8, D_1003150);
+void Ui_DrawBorderStyleB(s32 x1, s32 y1, s32 border_x, s32 border_y) {
+    Ui_DrawTexturedRect8x8(x1, y1, 8, 8, D_1002BD0);
+    Ui_DrawTexturedRect8x8(x1, (y1 + border_y) - 8, 8, 8, D_1002C50);
+    Ui_DrawTexturedRect8x8((x1 + border_x) - 8, (y1 + border_y) - 8, 8, 8, D_1002CD0);
+    Ui_DrawTexturedRect8x8((x1 + border_x) - 8, y1, 8, 8, D_1002D50);
 
-    if (arg2 > 16) {
-        Ui_DrawTexturedRect8x8(arg0 + 8, arg1, arg2 - 0x10, 8, D_1002DD0);
-        Ui_DrawTexturedRect8x8(arg0 + 8, (arg1 + arg3) - 8, arg2 - 0x10, 8, D_1002E50);
+    if (border_x > 16) {
+        Ui_DrawTexturedRect8x8(x1 + 8, y1, border_x - 0x10, 8, D_10029D0);
+        Ui_DrawTexturedRect8x8(x1 + 8, (y1 + border_y) - 8, border_x - 0x10, 8, D_1002A50);
     }
 
-    if (arg3 > 16) {
-        Ui_DrawTexturedRect8x8(arg0, arg1 + 8, 8, arg3 - 0x10, D_1002ED0);
-        Ui_DrawTexturedRect8x8((arg0 + arg2) - 8, arg1 + 8, 8, arg3 - 0x10, D_1002F50);
+    if (border_y > 16) {
+        Ui_DrawTexturedRect8x8(x1, y1 + 8, 8, border_y - 0x10, D_1002AD0);
+        Ui_DrawTexturedRect8x8((x1 + border_x) - 8, y1 + 8, 8, border_y - 0x10, D_1002B50);
+    }
+}
+
+void Ui_DrawBorderStyleC(s32 x1, s32 y1, s32 border_x, s32 border_y) {
+    Ui_DrawTexturedRect8x8(x1, y1, 8, 8, D_1002FD0);
+    Ui_DrawTexturedRect8x8(x1, (y1 + border_y) - 8, 8, 8, D_1003050);
+    Ui_DrawTexturedRect8x8((x1 + border_x) - 8, (y1 + border_y) - 8, 8, 8, D_10030D0);
+    Ui_DrawTexturedRect8x8((x1 + border_x) - 8, y1, 8, 8, D_1003150);
+
+    if (border_x > 16) {
+        Ui_DrawTexturedRect8x8(x1 + 8, y1, border_x - 0x10, 8, D_1002DD0);
+        Ui_DrawTexturedRect8x8(x1 + 8, (y1 + border_y) - 8, border_x - 0x10, 8, D_1002E50);
+    }
+
+    if (border_y > 16) {
+        Ui_DrawTexturedRect8x8(x1, y1 + 8, 8, border_y - 0x10, D_1002ED0);
+        Ui_DrawTexturedRect8x8((x1 + border_x) - 8, y1 + 8, 8, border_y - 0x10, D_1002F50);
     }
 }
 
@@ -365,13 +365,13 @@ void Ui_DrawBorderedPanelStyleB(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u16 arg4
     gSPDisplayList(gDisplayListHead++, D_8006F630);
 }
 
-void Ui_DrawBorderedPanelNoFill(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
+void Ui_DrawBorderedPanelNoFill(s32 x1, s32 y1, s32 border_x, s32 border_y) {
     gSPDisplayList(gDisplayListHead++, D_8006F518);
 
     if (StageContext_IsHighResolution() != 0) {
-        Ui_DrawBorderStyleA(arg0, arg1, arg2, arg3);
+        Ui_DrawBorderStyleA(x1, y1, border_x, border_y);
     } else {
-        Ui_DrawBorderStyleC(arg0, arg1, arg2, arg3);
+        Ui_DrawBorderStyleC(x1, y1, border_x, border_y);
     }
 
     gSPDisplayList(gDisplayListHead++, D_8006F630);

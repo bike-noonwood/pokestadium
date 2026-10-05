@@ -11,8 +11,8 @@
 #include "src/memory.h"
 #include "src/stage_loader.h"
 
-static char** D_84A03130;
-static char** D_84A03134;
+static char** glc_text_ui;
+static char** glc_text_trainer_names;
 static unk_D_84A03138 D_84A03138[4];
 static BinArchive* D_84A03168;
 static BinArchive* D_84A0316C;
@@ -77,10 +77,10 @@ static unk_D_84A02F00 D_84A02F00[] = {
 static s16 D_84A030E0 = 0;
 static s16 D_84A030E4 = 0;
 static s16 D_84A030E8 = 0xFF;
-static s16 D_84A030EC = 0;
+static s16 latest_gym_beaten = 0;
 static s16 D_84A030F0 = 0;
 
-void Glc_DrawBackgroundCrossfade(u8* arg0, u8* arg1, u8 arg2) {
+void Glc_DrawBackgroundCrossfade(u8* texture, u8* multiblock_texture, u8 alpha) {
     s32 i;
     s32 j;
 
@@ -92,89 +92,89 @@ void Glc_DrawBackgroundCrossfade(u8* arg0, u8* arg1, u8 arg2) {
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, 0, 640, 480);
     gDPSetCombineLERP(gDisplayListHead++, TEXEL1, TEXEL0, ENV_ALPHA, TEXEL0, TEXEL1, TEXEL0, ENVIRONMENT, TEXEL0, 0, 0,
                       0, COMBINED, 0, 0, 0, COMBINED);
-    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, arg2);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, alpha);
 
     gDPPipeSync(gDisplayListHead++);
 
     for (i = 0; i < 0x1E0; i += 0x20) {
         for (j = 0; j < 0x280; j += 0x20) {
-            gDPLoadTextureBlock(gDisplayListHead++, arg0, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+            gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
                                 G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                                 G_TX_NOLOD, G_TX_NOLOD);
-            gDPLoadMultiBlock(gDisplayListHead++, arg1, 0x0100, 1, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+            gDPLoadMultiBlock(gDisplayListHead++, multiblock_texture, 0x0100, 1, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
                               G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                               G_TX_NOLOD, G_TX_NOLOD);
             gSPTextureRectangle(gDisplayListHead++, j << 2, i << 2, (j + 0x20) << 2, (i + 0x20) << 2, G_TX_RENDERTILE,
                                 0, 0, 0x0200, 0x0200);
-            arg0 += 0x200;
-            arg1 += 0x200;
+            texture += 0x200;
+            multiblock_texture += 0x200;
         }
     }
 }
 
-void Glc_DrawScaledTextureRgba(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4, u8* arg5, f32 arg6) {
+void Glc_DrawScaledTextureRgba(s16 x_start, s16 y_start, s16 length, s16 height, s16 width, u8* texture, f32 scale) {
     UNUSED s32 pad;
 
-    gDPLoadTextureBlock(gDisplayListHead++, arg5, G_IM_FMT_RGBA, G_IM_SIZ_16b, (s32)(arg4 / arg6), (s32)(arg3 / arg6),
+    gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, (s32)(width / scale), (s32)(height / scale),
                         0, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                         G_TX_NOLOD);
 
-    Gfx_DrawTexturedRectClipped(arg0, arg1, arg2, arg3, 0, 0, 1024.0f / arg6, 1024.0f / arg6, 0);
+    Gfx_DrawTexturedRectClipped(x_start, y_start, length, height, 0, 0, 1024.0f / scale, 1024.0f / scale, 0);
 }
 
 void func_84A00630(void) {
 }
 
-void Glc_DrawScaledTextureIa8(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, f32 arg5) {
+void Glc_DrawScaledTextureIa8(s16 x_start, s16 y_start, s16 width, s16 height, u8* texture, f32 scale) {
     UNUSED s32 pad;
 
-    gDPLoadTextureBlock(gDisplayListHead++, arg4, G_IM_FMT_IA, G_IM_SIZ_8b, (s32)(arg2 / arg5), (s32)(arg3 / arg5), 0,
+    gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_IA, G_IM_SIZ_8b, (s32)(width / scale), (s32)(height / scale), 0,
                         G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                         G_TX_NOLOD);
 
-    Gfx_DrawTexturedRectClipped(arg0, arg1, arg2, arg3, 0, 0, 1024.0f / arg5, 1024.0f / arg5, 0);
+    Gfx_DrawTexturedRectClipped(x_start, y_start, width, height, 0, 0, 1024.0f / scale, 1024.0f / scale, 0);
 }
 
 void Glc_DrawRoomDescription(void) {
     char sp40[0x100];
     UNUSED s32 pad2;
-    s16 sp3A;
+    s16 y1;
     UNUSED s32 pad;
     s16 temp_v0;
 
-    if (D_84A030EC >= 0x10) {
-        sp3A = 0xF0 - (D_84A030EC / 2);
-        Ui_DrawBorderedPanelNoFill(0x78, sp3A, 0x190, D_84A030EC);
-        Gfx_FillRectWithDisplayState(0x7F, sp3A + 7, 0x182, D_84A030EC - 0xE, 0x14, 0x32, 0x64, 0x96);
+    if (latest_gym_beaten >= 0x10) {
+        y1 = 240 - (latest_gym_beaten / 2);
+        Ui_DrawBorderedPanelNoFill(120, y1, 400, latest_gym_beaten);
+        Gfx_FillRectWithDisplayState(127, y1 + 7, 386, latest_gym_beaten - 14, 0x14, 0x32, 0x64, 0x96);
 
-        if (D_84A030EC == 0x50) {
+        if (latest_gym_beaten == 0x50) {
             Font_BeginTranslucentTextRendering();
             Font_SetActive(8, 0);
-            Font_SetLineHeight(0x18);
+            Font_SetLineHeight(24);
 
             if (D_84A030E0 == 7) {
-                Font_Printf(0x88, sp3A + 0x10, Text_GetString(NULL, 0, D_84A03130, 0xC));
+                Font_Printf(136, y1 + 16, Text_GetString(NULL, 0, glc_text_ui, 0xC));
             } else if (D_84A030E0 == 0xA) {
-                Font_Printf(0x88, sp3A + 0x10, Text_GetString(NULL, 0, D_84A03130, 0xD));
+                Font_Printf(136, y1 + 16, Text_GetString(NULL, 0, glc_text_ui, 0xD));
             } else {
                 temp_v0 = D_84A02F00[D_84A030E0].unk_22;
                 if (temp_v0 >= 0x1E) {
-                    Text_SetStringToken(0x24, Text_GetString(NULL, 0, D_84A03134, temp_v0));
+                    Text_SetStringToken(0x24, Text_GetString(NULL, 0, glc_text_trainer_names, temp_v0));
                 } else if (temp_v0 >= 0) {
-                    Text_SetStringToken(0x24, Text_GetString(NULL, 0, D_84A03130, temp_v0));
+                    Text_SetStringToken(0x24, Text_GetString(NULL, 0, glc_text_ui, temp_v0));
                 } else {
                     Text_SetStringToken(0x24, " ");
                 }
 
                 temp_v0 = D_84A02F00[D_84A030E0 + 1].unk_22;
                 if (temp_v0 >= 0x1E) {
-                    Text_SetStringToken(0x29, Text_GetString(NULL, 0, D_84A03134, temp_v0));
+                    Text_SetStringToken(0x29, Text_GetString(NULL, 0, glc_text_trainer_names, temp_v0));
                 } else if (temp_v0 >= 0) {
-                    Text_SetStringToken(0x29, Text_GetString(NULL, 0, D_84A03130, temp_v0));
+                    Text_SetStringToken(0x29, Text_GetString(NULL, 0, glc_text_ui, temp_v0));
                 } else {
                     Text_SetStringToken(0x29, " ");
                 }
-                Font_Printf(0x88, sp3A + 0x10, Text_GetString(sp40, sizeof(sp40), D_84A03130, 0xE));
+                Font_Printf(0x88, y1 + 0x10, Text_GetString(sp40, sizeof(sp40), glc_text_ui, 0xE));
             }
             Font_EndTexturedTextRendering();
         }
@@ -207,7 +207,7 @@ void Glc_DrawTrainerIntroPanels(void) {
                 Font_SetActive(8, 0);
 
                 if (sp58->unk_20 >= 0) {
-                    var_s0 = Text_GetString(NULL, 0, D_84A03130, sp58->unk_20);
+                    var_s0 = Text_GetString(NULL, 0, glc_text_ui, sp58->unk_20);
                 } else {
                     var_s0 = " ";
                 }
@@ -218,9 +218,9 @@ void Glc_DrawTrainerIntroPanels(void) {
             Font_SetActive(4, 0);
 
             if ((i == 3) && (D_84A030E0 < 8)) {
-                Font_Printf(tmp + 8, 0x10C, Text_GetString(NULL, 0, D_84A03130, 8));
+                Font_Printf(tmp + 8, 0x10C, Text_GetString(NULL, 0, glc_text_ui, 8));
             } else {
-                Font_Printf(tmp + 8, 0x10C, Text_GetString(NULL, 0, D_84A03130, 0xF));
+                Font_Printf(tmp + 8, 0x10C, Text_GetString(NULL, 0, glc_text_ui, 0xF));
             }
 
             Font_SetActive(0x10, 0);
@@ -328,9 +328,9 @@ void Glc_DrawRoomLabels(void) {
     for (; var_s2 > 0; var_s2--, var_s1++) {
         if (var_s1->unk_01 != 0) {
             if (var_s1->unk_22 >= 0x1E) {
-                var_s0 = Text_GetString(NULL, 0, D_84A03134, var_s1->unk_22);
+                var_s0 = Text_GetString(NULL, 0, glc_text_trainer_names, var_s1->unk_22);
             } else if (var_s1->unk_22 >= 0) {
-                var_s0 = Text_GetString(NULL, 0, D_84A03130, var_s1->unk_22);
+                var_s0 = Text_GetString(NULL, 0, glc_text_ui, var_s1->unk_22);
             } else {
                 var_s0 = " ";
             }
@@ -368,7 +368,7 @@ void Glc_DrawRoomInfoPanel(unk_D_84A02F00* arg0, u8 arg1, u8 arg2) {
         Font_SetActive(8, 0);
 
         if (arg0->unk_20 >= 0) {
-            sp54 = Text_GetString(NULL, 0, D_84A03130, arg0->unk_20);
+            sp54 = Text_GetString(NULL, 0, glc_text_ui, arg0->unk_20);
         } else {
             sp54 = " ";
         }
@@ -376,9 +376,9 @@ void Glc_DrawRoomInfoPanel(unk_D_84A02F00* arg0, u8 arg1, u8 arg2) {
         Font_SetActive(0x20, 0);
 
         if (arg0->unk_22 >= 0x1E) {
-            sp54 = Text_GetString(NULL, 0, D_84A03134, arg0->unk_22);
+            sp54 = Text_GetString(NULL, 0, glc_text_trainer_names, arg0->unk_22);
         } else if (arg0->unk_22 >= 0) {
-            sp54 = Text_GetString(NULL, 0, D_84A03130, arg0->unk_22);
+            sp54 = Text_GetString(NULL, 0, glc_text_ui, arg0->unk_22);
         } else {
             sp54 = " ";
         }
@@ -418,9 +418,9 @@ void Glc_DrawFinalRoomInfoPanel(unk_D_84A02F00* arg0, u8 arg1, u8 arg2) {
     Font_SetActive(0x10, 0);
 
     if (arg0->unk_22 >= 0x1E) {
-        var_s0 = Text_GetString(NULL, 0, D_84A03134, arg0->unk_22);
+        var_s0 = Text_GetString(NULL, 0, glc_text_trainer_names, arg0->unk_22);
     } else if (arg0->unk_22 >= 0) {
-        var_s0 = Text_GetString(NULL, 0, D_84A03130, arg0->unk_22);
+        var_s0 = Text_GetString(NULL, 0, glc_text_ui, arg0->unk_22);
     } else {
         var_s0 = " ";
     }
@@ -741,7 +741,7 @@ s32 Glc_AdvanceRoom(void) {
     }
 
     for (i = 1; i < 5; i++) {
-        D_84A030EC = i * 0x14;
+        latest_gym_beaten = i * 0x14;
         Controller_PollInputs();
         Glc_Draw();
     }
@@ -765,7 +765,7 @@ s32 Glc_AdvanceRoom(void) {
     }
 
     for (i = 3; i >= 0; i--) {
-        D_84A030EC = i * 0x14;
+        latest_gym_beaten = i * 0x14;
         Controller_PollInputs();
         Glc_Draw();
     }
@@ -867,8 +867,8 @@ s32 GymLeaderCastle_Main(s32 arg0, UNUSED s32 arg1) {
     ASSET_LOAD(D_1000000, common_menu1_ui, 0);
     ASSET_LOAD(D_3000000, gym_leader_castle_ui, 0);
     Text_InitStringTables();
-    D_84A03130 = Text_GetStringTable(0x19);
-    D_84A03134 = Text_GetStringTable(0x22);
+    glc_text_ui = Text_GetStringTable(0x19);
+    glc_text_trainer_names = Text_GetStringTable(0x22);
     Save_EnsureBankLoaded(2);
     Save_GetModeSettings(&D_84A03180, D_800AE540.unk_11F2);
     D_84A03168 = BinArchive_Open(0x898000, NULL, 1, 1);
