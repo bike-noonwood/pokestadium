@@ -13,7 +13,7 @@
 
 static char** glc_text_ui;
 static char** glc_text_trainer_names;
-static struct Glc_Trainer current_node_trainers[4];
+static Glc_Trainer current_node_trainers[4];
 static BinArchive* D_84A03168;
 static BinArchive* D_84A0316C;
 static BinArchive* D_84A03170;
@@ -77,7 +77,7 @@ static CastleMapNode castle_map_nodes[] = {
 static s16 selected_map_node = 0;
 static s16 D_84A030E4 = 0;
 static s16 D_84A030E8 = 0xFF;
-static s16 latest_gym_beaten = 0;
+static s16 room_description_height = 0;
 static s16 glc_to_e4_transition = 0;
 
 void Glc_DrawBackgroundCrossfade(u8* fade_in_texture, u8* fade_out_texture, u8 alpha) {
@@ -142,12 +142,12 @@ void Glc_DrawRoomDescription(void) {
     UNUSED s32 pad;
     s16 current_node_file_number;
 
-    if (latest_gym_beaten >= 0x10) {
-        y1 = 240 - (latest_gym_beaten / 2);
-        Ui_DrawBorderedPanelNoFill(120, y1, 400, latest_gym_beaten);
-        Gfx_FillRectWithDisplayState(127, y1 + 7, 386, latest_gym_beaten - 14, 0x14, 0x32, 0x64, 0x96);
+    if (room_description_height >= 0x10) {
+        y1 = 240 - (room_description_height / 2);
+        Ui_DrawBorderedPanelNoFill(120, y1, 400, room_description_height);
+        Gfx_FillRectWithDisplayState(127, y1 + 7, 386, room_description_height - 14, 0x14, 0x32, 0x64, 0x96);
 
-        if (latest_gym_beaten == 0x50) {
+        if (room_description_height == 0x50) {
             Font_BeginTranslucentTextRendering();
             Font_SetActive(8, 0);
             Font_SetLineHeight(24);
@@ -225,8 +225,8 @@ void Glc_DrawTrainerIntroPanels(void) {
             }
 
             Font_SetActive(0x10, 0);
-            Font_Printf((trainer_portrait_x - (Font_MeasureTextExtent(0x10, 0, current_node_trainers[i].name_length) / 2)) + 64, 284,
-                          current_node_trainers[i].name_length);
+            Font_Printf((trainer_portrait_x - (Font_MeasureTextExtent(0x10, 0, current_node_trainers[i].name) / 2)) + 64, 284,
+                          current_node_trainers[i].name);
             Font_EndTexturedTextRendering();
         }
     }
@@ -284,23 +284,23 @@ void Glc_DrawRoomMarkers(void) {
         if (node->node_state != 0) {
             node_alpha = 0xFF;
             if (node->node_state == 1) {
-                node_alpha = (s32)((COSS(node->plusing) + 1.0f) * 96.0f);
+                node_alpha = (s32)((COSS(node->pulsing) + 1.0f) * 96.0f);
                 node_alpha += 63;
-                node->plusing += 0x200;
+                node->pulsing += 0x200;
             } else {
-                node->plusing = 0;
+                node->pulsing = 0;
                 node->node_state--;
             }
 
-            gDPSetEnvColor(gDisplayListHead++, node->node_color.r, node->node_color.g, node->node_color.b, node_alpha);
+            gDPSetEnvColor(gDisplayListHead++, node->color.r, node->color.g, node->color.b, node_alpha);
 
-            if (node->unk_00 == 9) {
+            if (node->index == 9) {
                 gDPSetPrimColor(gDisplayListHead++, 0, 0, 255, 255, 0, 255);
             } else {
                 gDPSetPrimColor(gDisplayListHead++, 0, 0, 255, 255, 255, 255);
             }
 
-            Glc_DrawScaledTextureIa8(node->node_x, node->node_y, node->node_width * 2, node->node_height * 2, node->node_texture, 2.0f);
+            Glc_DrawScaledTextureIa8(node->marker_x, node->marker_y, node->marker_width * 2, node->marker_height * 2, node->texture, 2.0f);
         }
     }
 
@@ -335,8 +335,8 @@ void Glc_DrawRoomLabels(void) {
             } else {
                 label = " ";
             }
-            tmp = node->x - (Font_MeasureTextExtent(4, 0, label) / 2);
-            Font_Printf(tmp, node->y, label);
+            tmp = node->label_x - (Font_MeasureTextExtent(4, 0, label) / 2);
+            Font_Printf(tmp, node->label_y, label);
         }
     }
 
@@ -347,15 +347,15 @@ void Glc_DrawRoomLabels(void) {
 void Glc_DrawGymLeaderInfoPanel(CastleMapNode* node, u8 alpha1, u8 alpha2) {
     char* string;
 
-    if (node->alpha != NULL) {
+    if (node->info_panel_texture != NULL) {
         gSPDisplayList(gDisplayListHead++, D_8006F518);
         gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, alpha1);
 
-        Glc_DrawScaledTextureRgba(502, 352, 96, 48, 96, node->alpha, 1.5f);
-        Glc_DrawScaledTextureRgba(502, 400, 96, 48, 96, node->alpha + 0x1000, 1.5f);
+        Glc_DrawScaledTextureRgba(502, 352, 96, 48, 96, node->info_panel_texture, 1.5f);
+        Glc_DrawScaledTextureRgba(502, 400, 96, 48, 96, node->info_panel_texture + 0x1000, 1.5f);
 
         gSPDisplayList(gDisplayListHead++, D_8006F558);
-        gDPSetEnvColor(gDisplayListHead++, node->node_color.r, node->node_color.g, node->node_color.b, (alpha2 * 0x96) / 255);
+        gDPSetEnvColor(gDisplayListHead++, node->color.r, node->color.g, node->color.b, (alpha2 * 0x96) / 255);
 
         Gfx_DrawTextureIa16(358, 372, 16, 76, D_300C290, 0x10, 0);
         Gfx_DrawTexturedRectClipped(374, 372, 128, 76, 480, 0, 0, 0x400, 0);
@@ -396,14 +396,14 @@ void Glc_DrawEliteFourRoomInfoPanel(CastleMapNode* node, u8 alpha1, u8 alpha2) {
     gSPDisplayList(gDisplayListHead++, D_8006F518);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, alpha1);
 
-    Glc_DrawScaledTextureRgba(470, 318, 128, 26, 128, node->alpha, 1.28f);
-    Glc_DrawScaledTextureRgba(470, 344, 128, 26, 128, node->alpha + 0xFA0, 1.28f);
-    Glc_DrawScaledTextureRgba(470, 370, 128, 26, 128, node->alpha + 0x1F40, 1.28f);
-    Glc_DrawScaledTextureRgba(470, 396, 128, 26, 128, node->alpha + 0x2EE0, 1.28f);
-    Glc_DrawScaledTextureRgba(470, 422, 128, 26, 128, node->alpha + 0x3E80, 1.28f);
+    Glc_DrawScaledTextureRgba(470, 318, 128, 26, 128, node->info_panel_texture, 1.28f);
+    Glc_DrawScaledTextureRgba(470, 344, 128, 26, 128, node->info_panel_texture + 0xFA0, 1.28f);
+    Glc_DrawScaledTextureRgba(470, 370, 128, 26, 128, node->info_panel_texture + 0x1F40, 1.28f);
+    Glc_DrawScaledTextureRgba(470, 396, 128, 26, 128, node->info_panel_texture + 0x2EE0, 1.28f);
+    Glc_DrawScaledTextureRgba(470, 422, 128, 26, 128, node->info_panel_texture + 0x3E80, 1.28f);
 
     gSPDisplayList(gDisplayListHead++, D_8006F558);
-    gDPSetEnvColor(gDisplayListHead++, node->node_color.r, node->node_color.g, node->node_color.b, (alpha2 * 0x96) / 255);
+    gDPSetEnvColor(gDisplayListHead++, node->color.r, node->color.g, node->color.b, (alpha2 * 0x96) / 255);
     gDPLoadTextureBlock(gDisplayListHead++, D_300C290, G_IM_FMT_IA, G_IM_SIZ_16b, 16, 76, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                         G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
@@ -470,11 +470,11 @@ void Glc_UpdateMapCursor(void) {
     CastleMapNode* node = &castle_map_nodes[selected_map_node];
 
     if (D_84A030E4 == 0) {
-        x = node->unk_06 - 0x20;
-        y = node->unk_08 - 0xD;
+        x = node->cursor_x - 0x20;
+        y = node->cursor_y - 0xD;
     } else {
-        x = ((((castle_map_nodes[current_hover_node_index].unk_06 - node->unk_06) * D_84A030E4) / 4) + node->unk_06) - 0x20;
-        y = ((((castle_map_nodes[current_hover_node_index].unk_08 - node->unk_08) * D_84A030E4) / 4) + node->unk_08) - 0xD;
+        x = ((((castle_map_nodes[current_hover_node_index].cursor_x - node->cursor_x) * D_84A030E4) / 4) + node->cursor_x) - 0x20;
+        y = ((((castle_map_nodes[current_hover_node_index].cursor_y - node->cursor_y) * D_84A030E4) / 4) + node->cursor_y) - 0xD;
 
         D_84A030E4--;
         if ((D_84A030E4 == 0) && ((selected_map_node == 8) || (selected_map_node == 9))) {
@@ -556,7 +556,7 @@ s32 Glc_SelectRoom(void) {
                         changed = 3;
                     } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_B)) {
                         Audio_PlaySoundEffectById(3);
-                        if (node->unk_00 >= 0xA) {
+                        if (node->index >= 0xA) {
                             selected_map_node = 9;
                             D_84A030E4 = 3;
                         } else {
@@ -623,7 +623,7 @@ void Glc_LoadTrainerPanels(void) {
         portrait_file_idx = (trainer_data[i].gfx_file_idx >> 8) & 0xFF;
         current_node_trainers[i].loaded = 1;
         current_node_trainers[i].portrait_x = 0x280;
-        current_node_trainers[i].name_length = trainer_data[i].name1;
+        current_node_trainers[i].name = trainer_data[i].name1;
         current_node_trainers[i].portrait = BinArchive_GetFile(D_84A0316C, portrait_file_idx);
     }
 }
@@ -636,7 +636,7 @@ void Glc_ClearTrainerPanels(void) {
     }
 }
 
-void Glc_AnimateTrainerPanelsIn(s16 panels_start, s16 panels_end, s16 timer, s16 x_delta) {
+void Glc_SlideTrainerPanels(s16 panels_start, s16 panels_end, s16 timer, s16 x_delta) {
     s32 i;
 
     while (timer-- > 0) {
@@ -648,7 +648,7 @@ void Glc_AnimateTrainerPanelsIn(s16 panels_start, s16 panels_end, s16 timer, s16
     }
 }
 
-s32 GymLeaderCastle_ShowIntro(void) {
+s32 Glc_ShowIntro(void) {
     s16 i;
     s32 in_elite_four_challenge;
     s32 castle_phase = 0;
@@ -742,7 +742,7 @@ s32 Glc_AdvanceRoom(void) {
     }
 
     for (i = 1; i < 5; i++) {
-        latest_gym_beaten = i * 0x14;
+        room_description_height = i * 0x14;
         Controller_PollInputs();
         Glc_Draw();
     }
@@ -766,7 +766,7 @@ s32 Glc_AdvanceRoom(void) {
     }
 
     for (i = 3; i >= 0; i--) {
-        latest_gym_beaten = i * 0x14;
+        room_description_height = i * 0x14;
         Controller_PollInputs();
         Glc_Draw();
     }
@@ -795,7 +795,7 @@ s16 Glc_RunMenu(s16 action) {
                 break;
 
             case 3:
-                action = GymLeaderCastle_ShowIntro();
+                action = Glc_ShowIntro();
                 break;
 
             case 4:
@@ -851,11 +851,11 @@ s16 Glc_InitMenu(s16 arg0) {
     }
 
     for (i = 0; i < 8; i++) {
-        castle_map_nodes[i].alpha = BinArchive_GetFile(D_84A0316C, i + 2);
+        castle_map_nodes[i].info_panel_texture = BinArchive_GetFile(D_84A0316C, i + 2);
     }
 
-    castle_map_nodes[10].alpha = D_300CC10;
-    castle_map_nodes[11].alpha = BinArchive_GetFile(D_84A0316C, 0xE);
+    castle_map_nodes[10].info_panel_texture = D_300CC10;
+    castle_map_nodes[11].info_panel_texture = BinArchive_GetFile(D_84A0316C, 0xE);
     return sp2C;
 }
 

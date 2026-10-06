@@ -7,30 +7,30 @@ typedef struct Glc_Trainer {
     /* 0x00 */ u8 loaded;
     /* 0x02 */ s16 portrait_x;
     /* 0x04 */ s32 portrait;
-    /* 0x08 */ char* name_length;
-} unk_D_84A03138; // size = 0xC
+    /* 0x08 */ char* name;
+} Glc_Trainer; // size = 0xC
 
-typedef struct unk_D_84A02F00 {
-    /* 0x00 */ u8 unk_00;
+typedef struct CastleMapNode {
+    /* 0x00 */ u8 index;
     /* 0x01 */ u8 node_state;
-    /* 0x02 */ s16 x;
-    /* 0x04 */ s16 y;
-    /* 0x06 */ s16 unk_06;
-    /* 0x08 */ s16 unk_08;
-    /* 0x0A */ s16 node_x;
-    /* 0x0C */ s16 node_y;
-    /* 0x0E */ s16 node_width;
-    /* 0x10 */ s16 node_height;
-    /* 0x12 */ s16 plusing;
+    /* 0x02 */ s16 label_x;
+    /* 0x04 */ s16 label_y;
+    /* 0x06 */ s16 cursor_x;
+    /* 0x08 */ s16 cursor_y;
+    /* 0x0A */ s16 marker_x;
+    /* 0x0C */ s16 marker_y;
+    /* 0x0E */ s16 marker_width;
+    /* 0x10 */ s16 marker_height;
+    /* 0x12 */ s16 pulsing;
     /* 0x14 */ s8 up_neighbour;
     /* 0x15 */ s8 down_neighbour;
     /* 0x16 */ s8 left_neighbour;
     /* 0x17 */ s8 right_neighbour;
-    /* 0x18 */ Color_RGBA8 node_color;
-    /* 0x1C */ u8* node_texture;
+    /* 0x18 */ Color_RGBA8 color;
+    /* 0x1C */ u8* texture;
     /* 0x20 */ s16 boss_title;
     /* 0x22 */ s16 file_number;
-    /* 0x24 */ u8* alpha;
+    /* 0x24 */ u8* info_panel_texture;
 } CastleMapNode; // size = 0x28
 
 void Glc_DrawBackgroundCrossfade(u8* texture, u8* multiblock_texture, u8 alpha);
@@ -52,7 +52,7 @@ s32 Glc_SelectRoom(void);
 void Glc_LoadTrainerPanels(void);
 void Glc_ClearTrainerPanels(void);
 void Glc_AnimateTrainerPanelsIn(s16 panels_start, s16 panels_end, s16 timer, s16 x_delta);
-s32 GymLeaderCastle_ShowIntro(void);
+s32 Glc_ShowIntro(void);
 s32 Glc_AdvanceRoom(void);
 s16 Glc_RunMenu(s16 action);
 s16 Glc_InitMenu(s16 arg0);
