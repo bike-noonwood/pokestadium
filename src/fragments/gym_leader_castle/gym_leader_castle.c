@@ -599,7 +599,7 @@ void Glc_LoadTrainerPanels(void) {
     s32 var_a1;
     s32 var_s7;
     TrainerData* trainer_data;
-    s32 portrait_file_idx;
+    s32 portrait_file_index;
 
     if (selected_map_node == 0xB) {
         var_s7 = 1;
@@ -620,11 +620,11 @@ void Glc_LoadTrainerPanels(void) {
     trainer_data = BinArchive_GetFile(D_84A03168, var_a1);
 
     for (i = 0; i < var_s7; i++) {
-        portrait_file_idx = (trainer_data[i].gfx_file_idx >> 8) & 0xFF;
+        portrait_file_index = (trainer_data[i].gfx_file_index >> 8) & 0xFF;
         current_node_trainers[i].loaded = 1;
         current_node_trainers[i].portrait_x = 0x280;
         current_node_trainers[i].name = trainer_data[i].name1;
-        current_node_trainers[i].portrait = BinArchive_GetFile(D_84A0316C, portrait_file_idx);
+        current_node_trainers[i].portrait = BinArchive_GetFile(D_84A0316C, portrait_file_index);
     }
 }
 
