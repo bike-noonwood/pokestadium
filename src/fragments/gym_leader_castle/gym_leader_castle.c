@@ -636,12 +636,12 @@ void Glc_ClearTrainerPanels(void) {
     }
 }
 
-void Glc_AnimateTrainerPanelsIn(s16 panels_start, s16 panels_end, s16 timer, s16 x_increase) {
+void Glc_AnimateTrainerPanelsIn(s16 panels_start, s16 panels_end, s16 timer, s16 x_delta) {
     s32 i;
 
     while (timer-- > 0) {
         for (i = panels_start; i <= panels_end; i++) {
-            current_node_trainers[i].portrait_x += x_increase;
+            current_node_trainers[i].portrait_x += x_delta;
         }
         Controller_PollInputs();
         Glc_Draw();
