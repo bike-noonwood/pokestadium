@@ -14,9 +14,9 @@
 static char** glc_text_ui;
 static char** glc_text_trainer_names;
 static Glc_Trainer current_node_trainers[4];
-static BinArchive* D_84A03168;
-static BinArchive* D_84A0316C;
-static BinArchive* D_84A03170;
+static BinArchive* trainer_data_archive;
+static BinArchive* portrait_archive;
+static BinArchive* background_archive ;
 static u8* gym_leader_castle_texture;
 static u8* elite_four_texture;
 static u8* D_84A0317C;
@@ -75,7 +75,7 @@ static CastleMapNode castle_map_nodes[] = {
 };
 
 static s16 selected_map_node = 0;
-static s16 D_84A030E4 = 0;
+static s16 cursor_move_timer = 0;
 static s16 D_84A030E8 = 0xFF;
 static s16 room_description_height = 0;
 static s16 glc_to_e4_transition = 0;
@@ -184,7 +184,7 @@ void Glc_DrawRoomDescription(void) {
 void Glc_DrawTrainerIntroPanels(void) {
     UNUSED s32 pad[3];
     s32 i;
-    char* important_trainer_title;
+    char* boss_title;
     CastleMapNode* hovered_map_node = &castle_map_nodes[selected_map_node];
 
     for (i = 0; i < 4; i++) {
@@ -208,12 +208,12 @@ void Glc_DrawTrainerIntroPanels(void) {
                 Font_SetActive(8, 0);
 
                 if (hovered_map_node->boss_title >= 0) {
-                    important_trainer_title = Text_GetString(NULL, 0, glc_text_ui, hovered_map_node->boss_title);
+                    boss_title = Text_GetString(NULL, 0, glc_text_ui, hovered_map_node->boss_title);
                 } else {
-                    important_trainer_title = " ";
+                    boss_title = " ";
                 }
 
-                Font_Printf((trainer_portrait_x - (Font_MeasureTextExtent(8, 0, important_trainer_title) / 2)) + 64, 244, important_trainer_title);
+                Font_Printf((trainer_portrait_x - (Font_MeasureTextExtent(8, 0, boss_title) / 2)) + 64, 244, boss_title);
             }
 
             Font_SetActive(4, 0);
@@ -441,14 +441,14 @@ void Glc_UpdateRoomInfoPanelFade(void) {
             } else {
                 Glc_DrawGymLeaderInfoPanel(&castle_map_nodes[selected_map_node], D_84A030E8, D_84A030E8);
             }
-        } else if (D_84A030E4 == 0) {
+        } else if (cursor_move_timer == 0) {
             if (selected_map_node == 0xA) {
                 Glc_DrawEliteFourRoomInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF);
             } else {
                 Glc_DrawGymLeaderInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF);
             }
         } else {
-            sp1F = ((D_84A030E4 * 0xFF) / 4) & 0xFF;
+            sp1F = ((cursor_move_timer * 0xFF) / 4) & 0xFF;
             if (selected_map_node == 0xA) {
                 Glc_DrawEliteFourRoomInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF - sp1F);
             } else {
@@ -469,15 +469,15 @@ void Glc_UpdateMapCursor(void) {
     s16 y;
     CastleMapNode* node = &castle_map_nodes[selected_map_node];
 
-    if (D_84A030E4 == 0) {
+    if (cursor_move_timer == 0) {
         x = node->cursor_x - 0x20;
         y = node->cursor_y - 0xD;
     } else {
-        x = ((((castle_map_nodes[current_hover_node_index].cursor_x - node->cursor_x) * D_84A030E4) / 4) + node->cursor_x) - 0x20;
-        y = ((((castle_map_nodes[current_hover_node_index].cursor_y - node->cursor_y) * D_84A030E4) / 4) + node->cursor_y) - 0xD;
+        x = ((((castle_map_nodes[current_hover_node_index].cursor_x - node->cursor_x) * cursor_move_timer) / 4) + node->cursor_x) - 0x20;
+        y = ((((castle_map_nodes[current_hover_node_index].cursor_y - node->cursor_y) * cursor_move_timer) / 4) + node->cursor_y) - 0xD;
 
-        D_84A030E4--;
-        if ((D_84A030E4 == 0) && ((selected_map_node == 8) || (selected_map_node == 9))) {
+        cursor_move_timer--;
+        if ((cursor_move_timer == 0) && ((selected_map_node == 8) || (selected_map_node == 9))) {
             StageContext_SetClearColor(1);
             StageFade_StartFromTransparent(8);
         }
@@ -528,12 +528,12 @@ s32 func_84A02074(void) {
 }
 
 s32 Glc_SelectRoom(void) {
-    s16 var_s4;
+    s16 auto_advance_timer;
     s16 node_to_move_to;
     s16 changed;
     CastleMapNode* node;
 
-    var_s4 = 0x1E;
+    auto_advance_timer = 30;
     changed = 2;
 
     while (changed == 2) {
@@ -544,11 +544,11 @@ s32 Glc_SelectRoom(void) {
 
         if (func_84A02074() == 0) {
             if (StageContext_GetFadeMode() == 0) {
-                if (D_84A030E4 == 0) {
+                if (cursor_move_timer == 0) {
                     current_hover_node_index = selected_map_node;
                     if (selected_map_node == 0xB) {
-                        var_s4--;
-                        if (var_s4 == 0) {
+                        auto_advance_timer--;
+                        if (auto_advance_timer == 0) {
                             changed = 3;
                         }
                     } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_A)) {
@@ -558,7 +558,7 @@ s32 Glc_SelectRoom(void) {
                         Audio_PlaySoundEffectById(3);
                         if (node->index >= 0xA) {
                             selected_map_node = 9;
-                            D_84A030E4 = 3;
+                            cursor_move_timer = 3;
                         } else {
                             changed = 1;
                         }
@@ -575,7 +575,7 @@ s32 Glc_SelectRoom(void) {
                     if ((node_to_move_to >= 0) && (castle_map_nodes[node_to_move_to].node_state != 0)) {
                         Audio_PlaySoundEffectById(1);
                         selected_map_node = node_to_move_to;
-                        D_84A030E4 = 3;
+                        cursor_move_timer = 3;
                     }
                 }
             } else if (StageContext_GetFadeMode() == 1) {
@@ -596,35 +596,35 @@ s32 Glc_SelectRoom(void) {
 
 void Glc_LoadTrainerPanels(void) {
     s32 i;
-    s32 var_a1;
-    s32 var_s7;
+    s32 trainer_file_index;
+    s32 trainer_count;
     TrainerData* trainer_data;
     s32 portrait_file_index;
 
     if (selected_map_node == 0xB) {
-        var_s7 = 1;
+        trainer_count = 1;
     } else {
-        var_s7 = 4;
+        trainer_count = 4;
     }
 
     if (selected_map_node < 8) {
-        var_a1 = selected_map_node + 12;
+        trainer_file_index = selected_map_node + 12;
     } else {
-        var_a1 = selected_map_node + 10;
+        trainer_file_index = selected_map_node + 10;
     }
 
     if (D_800AE540.unk_11F2 != 0) {
-        var_a1 += 0x1F;
+        trainer_file_index += 0x1F;
     }
 
-    trainer_data = BinArchive_GetFile(D_84A03168, var_a1);
+    trainer_data = BinArchive_GetFile(trainer_data_archive, trainer_file_index);
 
-    for (i = 0; i < var_s7; i++) {
+    for (i = 0; i < trainer_count; i++) {
         portrait_file_index = (trainer_data[i].gfx_file_index >> 8) & 0xFF;
         current_node_trainers[i].loaded = 1;
         current_node_trainers[i].portrait_x = 0x280;
         current_node_trainers[i].name = trainer_data[i].name1;
-        current_node_trainers[i].portrait = BinArchive_GetFile(D_84A0316C, portrait_file_index);
+        current_node_trainers[i].portrait = BinArchive_GetFile(portrait_archive, portrait_file_index);
     }
 }
 
@@ -651,7 +651,7 @@ void Glc_SlideTrainerPanels(s16 panels_start, s16 panels_end, s16 timer, s16 x_d
 s32 Glc_ShowIntro(void) {
     s16 i;
     s32 in_elite_four_challenge;
-    s32 castle_phase = 0;
+    s32 intro_choice= 0;
 
     main_pool_push_state('itro');
 
@@ -674,21 +674,21 @@ s32 Glc_ShowIntro(void) {
         Glc_AnimateTrainerPanelsIn(0, 0, 2, -0x40);
     }
 
-    while (castle_phase == 0) {
+    while (intro_choice == 0) {
         Controller_PollInputs();
         Glc_Draw();
         if (BTN_IS_PRESSED(gPlayer1Controller, BTN_A)) {
-            castle_phase = 1;
+            intro_choice= 1;
         } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_B)) {
             if (selected_map_node == 0xB) {
-                castle_phase = 1;
+                intro_choice= 1;
             } else {
-                castle_phase = 2;
+                intro_choice= 2;
             }
         }
     }
 
-    if (castle_phase == 1) {
+    if (intro_choice == 1) {
         Audio_PlaySoundEffectById(0x1C);
         in_elite_four_challenge = 0;
         if (selected_map_node == 0xB) {
@@ -773,7 +773,7 @@ s32 Glc_AdvanceRoom(void) {
 
     current_hover_node_index = selected_map_node;
     selected_map_node += 1;
-    D_84A030E4 = 3;
+    cursor_move_timer = 3;
     return 2;
 }
 
@@ -851,11 +851,11 @@ s16 Glc_InitMenu(s16 arg0) {
     }
 
     for (i = 0; i < 8; i++) {
-        castle_map_nodes[i].info_panel_texture = BinArchive_GetFile(D_84A0316C, i + 2);
+        castle_map_nodes[i].info_panel_texture = BinArchive_GetFile(portrait_archive, i + 2);
     }
 
     castle_map_nodes[10].info_panel_texture = D_300CC10;
-    castle_map_nodes[11].info_panel_texture = BinArchive_GetFile(D_84A0316C, 0xE);
+    castle_map_nodes[11].info_panel_texture = BinArchive_GetFile(portrait_archive, 0xE);
     return sp2C;
 }
 
@@ -872,12 +872,12 @@ s32 GymLeaderCastle_Main(s32 arg0, UNUSED s32 arg1) {
     glc_text_trainer_names = Text_GetStringTable(0x22);
     Save_EnsureBankLoaded(2);
     Save_GetModeSettings(&D_84A03180, D_800AE540.unk_11F2);
-    D_84A03168 = BinArchive_Open(0x898000, NULL, 1, 1);
-    D_84A0316C = ASSET_LOAD2(battle_portraits, 1, 1);
-    D_84A03170 = ASSET_LOAD2(backgrounds, 1, 1);
-    gym_leader_castle_texture = BinArchive_GetFile(D_84A03170, 0xD);
-    elite_four_texture = BinArchive_GetFile(D_84A03170, 0x10);
-    D_84A0317C = BinArchive_GetFile(D_84A03170, 0xE);
+    trainer_data_archive = BinArchive_Open(0x898000, NULL, 1, 1);
+    portrait_archive = ASSET_LOAD2(battle_portraits, 1, 1);
+    background_archive  = ASSET_LOAD2(backgrounds, 1, 1);
+    gym_leader_castle_texture = BinArchive_GetFile(background_archive , 0xD);
+    elite_four_texture = BinArchive_GetFile(background_archive , 0x10);
+    D_84A0317C = BinArchive_GetFile(background_archive , 0xE);
     StageLoader_UpdateSegments();
 
     sp1E = Glc_InitMenu(arg0);
