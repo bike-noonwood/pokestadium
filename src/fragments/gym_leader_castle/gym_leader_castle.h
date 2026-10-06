@@ -33,7 +33,7 @@ typedef struct CastleMapNode {
     /* 0x24 */ u8* info_panel_texture;
 } CastleMapNode; // size = 0x28
 
-void Glc_DrawBackgroundCrossfade(u8* texture, u8* multiblock_texture, u8 alpha);
+void Glc_DrawBackgroundCrossFade(u8* fade_in_texture, u8* fade_out_texture, u8 alpha);
 void Glc_DrawScaledTextureRgba(s16 x_start, s16 y_start, s16 draw_width, s16 height, s16 load_width, u8* texture, f32 scale);
 void func_84A00630(void);
 void Glc_DrawScaledTextureIa8(s16 x_start, s16 y_start, s16 width, s16 height, u8* texture, f32 scale);

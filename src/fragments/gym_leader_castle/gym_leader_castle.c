@@ -86,7 +86,7 @@ static s16 D_84A030E8 = 0xFF;
 static s16 room_description_height = 0;
 static s16 glc_to_e4_transition = 0;
 
-void Glc_DrawBackgroundCrossfade(u8* fade_in_texture, u8* fade_out_texture, u8 alpha) {
+void Glc_DrawBackgroundCrossFade(u8* fade_in_texture, u8* fade_out_texture, u8 alpha) {
     s32 i;
     s32 j;
 
@@ -501,7 +501,7 @@ void Glc_Draw(void) {
         } else if (glc_to_e4_transition == 0xFF) {
             Gfx_DrawTiledRgba16Image(elite_four_texture);
         } else {
-            Glc_DrawBackgroundCrossfade(gym_leader_castle_texture, elite_four_texture, glc_to_e4_transition);
+            Glc_DrawBackgroundCrossFade(gym_leader_castle_texture, elite_four_texture, glc_to_e4_transition);
             if (glc_to_e4_transition < 0xFF) {
                 glc_to_e4_transition += 5;
             }
