@@ -344,7 +344,7 @@ void Glc_DrawRoomLabels(void) {
     Font_EndTexturedTextRendering();
 }
 
-void Glc_DrawRoomInfoPanel(CastleMapNode* node, u8 alpha1, u8 alpha2) {
+void Glc_DrawGymLeaderInfoPanel(CastleMapNode* node, u8 alpha1, u8 alpha2) {
     char* string;
 
     if (node->alpha != NULL) {
@@ -439,26 +439,26 @@ void Glc_UpdateRoomInfoPanelFade(void) {
             if (selected_map_node == 0xA) {
                 Glc_DrawEliteFourRoomInfoPanel(&castle_map_nodes[selected_map_node], D_84A030E8, D_84A030E8);
             } else {
-                Glc_DrawRoomInfoPanel(&castle_map_nodes[selected_map_node], D_84A030E8, D_84A030E8);
+                Glc_DrawGymLeaderInfoPanel(&castle_map_nodes[selected_map_node], D_84A030E8, D_84A030E8);
             }
         } else if (D_84A030E4 == 0) {
             if (selected_map_node == 0xA) {
                 Glc_DrawEliteFourRoomInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF);
             } else {
-                Glc_DrawRoomInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF);
+                Glc_DrawGymLeaderInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF);
             }
         } else {
             sp1F = ((D_84A030E4 * 0xFF) / 4) & 0xFF;
             if (selected_map_node == 0xA) {
                 Glc_DrawEliteFourRoomInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF - sp1F);
             } else {
-                Glc_DrawRoomInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF - sp1F);
+                Glc_DrawGymLeaderInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF - sp1F);
             }
 
             if (current_hover_node_index == 0xA) {
                 Glc_DrawEliteFourRoomInfoPanel(&castle_map_nodes[current_hover_node_index], sp1F, sp1F);
             } else {
-                Glc_DrawRoomInfoPanel(&castle_map_nodes[current_hover_node_index], sp1F, sp1F);
+                Glc_DrawGymLeaderInfoPanel(&castle_map_nodes[current_hover_node_index], sp1F, sp1F);
             }
         }
     }
@@ -777,7 +777,7 @@ s32 Glc_AdvanceRoom(void) {
     return 2;
 }
 
-s16 Glc_RunMenu(s16 arg0) {
+s16 Glc_RunMenu(s16 action) {
     s16 i;
 
     if (StageContext_GetFadeMode() == 1) {
@@ -788,18 +788,18 @@ s16 Glc_RunMenu(s16 arg0) {
         }
     }
 
-    while ((arg0 != 0) && (arg0 != 1)) {
-        switch (arg0) {
+    while ((action != 0) && (action != 1)) {
+        switch (action) {
             case 2:
-                arg0 = Glc_SelectRoom();
+                action = Glc_SelectRoom();
                 break;
 
             case 3:
-                arg0 = GymLeaderCastle_ShowIntro();
+                action = GymLeaderCastle_ShowIntro();
                 break;
 
             case 4:
-                arg0 = Glc_AdvanceRoom();
+                action = Glc_AdvanceRoom();
                 break;
         }
     }
@@ -810,7 +810,7 @@ s16 Glc_RunMenu(s16 arg0) {
     } else {
         D_800AE540.unk_0002 = selected_map_node - 2;
     }
-    return arg0;
+    return action;
 }
 
 s16 Glc_InitMenu(s16 arg0) {
