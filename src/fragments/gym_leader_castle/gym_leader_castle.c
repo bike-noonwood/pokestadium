@@ -261,15 +261,15 @@ void Glc_DrawMapBorder(void) {
 void Glc_DrawRoomMarkers(void) {
     s32 i;
     s32 node_alpha;
-    s32 backward_index;
+    s32 backwards_index;
     CastleMapNode* node;
 
     if (selected_map_node < 9) {
         node = &castle_map_nodes[0];
-        backward_index = 9;
+        backwards_index = 9;
     } else {
         node = &castle_map_nodes[9];
-        backward_index = 3;
+        backwards_index = 3;
     }
 
     gDPPipeSync(gDisplayListHead++);
@@ -280,7 +280,7 @@ void Glc_DrawRoomMarkers(void) {
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gSPClearGeometryMode(gDisplayListHead++, G_ZBUFFER | G_LIGHTING);
 
-    for (; backward_index > 0; backward_index--, node++) {
+    for (; backwards_index > 0; backwards_index--, node++) {
         if (node->node_state != 0) {
             node_alpha = 0xFF;
             if (node->node_state == 1) {
