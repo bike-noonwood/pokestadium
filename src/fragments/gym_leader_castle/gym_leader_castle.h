@@ -51,7 +51,7 @@ s32 func_84A02074(void);
 s32 Glc_SelectRoom(void);
 void Glc_LoadTrainerPanels(void);
 void Glc_ClearTrainerPanels(void);
-void Glc_AnimateTrainerPanelsIn(s16 panels_start, s16 panels_end, s16 timer, s16 x_delta);
+void Glc_SlideTrainerPanels(s16 panels_start, s16 panels_end, s16 timer, s16 x_delta);
 s32 Glc_ShowIntro(void);
 s32 Glc_AdvanceRoom(void);
 s16 Glc_RunMenu(s16 action);
