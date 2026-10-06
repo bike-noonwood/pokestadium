@@ -377,27 +377,27 @@ void Ui_DrawBorderedPanelNoFill(s32 x1, s32 y1, s32 border_x, s32 border_y) {
     gSPDisplayList(gDisplayListHead++, D_8006F630);
 }
 
-void Ui_DrawTextureMarker(s32 arg0, s32 arg1) {
+void Ui_DrawTextureMarker(s32 x, s32 y) {
     if (StageContext_IsHighResolution() != 0) {
         gSPDisplayList(gDisplayListHead++, D_8006F4E0);
-        Gfx_DrawTextureRgba16(arg0, arg1, 0x20, 0x16, D_10031D0, 0x20, 0x200000);
+        Gfx_DrawTextureRgba16(x, y, 0x20, 0x16, D_10031D0, 0x20, 0x200000);
     } else {
         gSPDisplayList(gDisplayListHead++, D_8006F5A0);
-        Gfx_DrawTextureRgba16Ia8(arg0, arg1, 0xC, 0xA, D_1003750, D_1003890, 0x10, 0x100000);
+        Gfx_DrawTextureRgba16Ia8(x, y, 0xC, 0xA, D_1003750, D_1003890, 0x10, 0x100000);
     }
 
     gSPDisplayList(gDisplayListHead++, D_8006F630);
 }
 
-void Ui_DrawAnimatedTextureMarker(s16 arg0, s16 arg1) {
+void Ui_DrawAnimatedTextureMarker(s16 x, s16 y) {
     static s16 D_8006F7D0 = 0;
 
     if (D_8006F7D0 < 6) {
-        arg0 += D_8006F7D0;
+        x += D_8006F7D0;
     } else {
-        arg0 = (arg0 - D_8006F7D0) + 0xC;
+        x = (x - D_8006F7D0) + 0xC;
     }
-    Ui_DrawTextureMarker(arg0, arg1);
+    Ui_DrawTextureMarker(x, y);
     D_8006F7D0 = (D_8006F7D0 + 1) % 12;
 }
 

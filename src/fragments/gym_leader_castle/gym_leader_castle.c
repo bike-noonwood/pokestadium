@@ -13,17 +13,17 @@
 
 static char** glc_text_ui;
 static char** glc_text_trainer_names;
-static unk_D_84A03138 D_84A03138[4];
+static struct Glc_Trainer current_node_trainers[4];
 static BinArchive* D_84A03168;
 static BinArchive* D_84A0316C;
 static BinArchive* D_84A03170;
-static u8* D_84A03174;
-static u8* D_84A03178;
+static u8* gym_leader_castle_texture;
+static u8* elite_four_texture;
 static u8* D_84A0317C;
 static ModeSettings D_84A03180;
-static s16 D_84A03188;
+static s16 current_hover_node_index;
 
-static unk_D_84A02F00 D_84A02F00[] = {
+static CastleMapNode castle_map_nodes[] = {
     {
         0x00,      0x00, 154, 390,  118, 362, 96, 278, 48, 70, -32768, 0, 0, 0, 2, { 0x96, 0x64, 0xFF, 0x00 },
         D_3000000, 0,    30,  NULL,
@@ -74,13 +74,13 @@ static unk_D_84A02F00 D_84A02F00[] = {
     },
 };
 
-static s16 D_84A030E0 = 0;
+static s16 selected_map_node = 0;
 static s16 D_84A030E4 = 0;
 static s16 D_84A030E8 = 0xFF;
 static s16 latest_gym_beaten = 0;
-static s16 D_84A030F0 = 0;
+static s16 glc_to_e4_transition = 0;
 
-void Glc_DrawBackgroundCrossfade(u8* texture, u8* multiblock_texture, u8 alpha) {
+void Glc_DrawBackgroundCrossfade(u8* fade_in_texture, u8* fade_out_texture, u8 alpha) {
     s32 i;
     s32 j;
 
@@ -98,28 +98,28 @@ void Glc_DrawBackgroundCrossfade(u8* texture, u8* multiblock_texture, u8 alpha) 
 
     for (i = 0; i < 0x1E0; i += 0x20) {
         for (j = 0; j < 0x280; j += 0x20) {
-            gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+            gDPLoadTextureBlock(gDisplayListHead++, fade_in_texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
                                 G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                                 G_TX_NOLOD, G_TX_NOLOD);
-            gDPLoadMultiBlock(gDisplayListHead++, multiblock_texture, 0x0100, 1, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
+            gDPLoadMultiBlock(gDisplayListHead++, fade_out_texture, 0x0100, 1, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, 0,
                               G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                               G_TX_NOLOD, G_TX_NOLOD);
             gSPTextureRectangle(gDisplayListHead++, j << 2, i << 2, (j + 0x20) << 2, (i + 0x20) << 2, G_TX_RENDERTILE,
                                 0, 0, 0x0200, 0x0200);
-            texture += 0x200;
-            multiblock_texture += 0x200;
+            fade_in_texture += 0x200;
+            fade_out_texture += 0x200;
         }
     }
 }
 
-void Glc_DrawScaledTextureRgba(s16 x_start, s16 y_start, s16 length, s16 height, s16 width, u8* texture, f32 scale) {
+void Glc_DrawScaledTextureRgba(s16 x_start, s16 y_start, s16 draw_width, s16 height, s16 load_width, u8* texture, f32 scale) {
     UNUSED s32 pad;
 
-    gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, (s32)(width / scale), (s32)(height / scale),
+    gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_RGBA, G_IM_SIZ_16b, (s32)(load_width / scale), (s32)(height / scale),
                         0, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                         G_TX_NOLOD);
 
-    Gfx_DrawTexturedRectClipped(x_start, y_start, length, height, 0, 0, 1024.0f / scale, 1024.0f / scale, 0);
+    Gfx_DrawTexturedRectClipped(x_start, y_start, draw_width, height, 0, 0, 1024.0f / scale, 1024.0f / scale, 0);
 }
 
 void func_84A00630(void) {
@@ -140,7 +140,7 @@ void Glc_DrawRoomDescription(void) {
     UNUSED s32 pad2;
     s16 y1;
     UNUSED s32 pad;
-    s16 temp_v0;
+    s16 current_node_file_number;
 
     if (latest_gym_beaten >= 0x10) {
         y1 = 240 - (latest_gym_beaten / 2);
@@ -152,25 +152,25 @@ void Glc_DrawRoomDescription(void) {
             Font_SetActive(8, 0);
             Font_SetLineHeight(24);
 
-            if (D_84A030E0 == 7) {
+            if (selected_map_node == 7) {
                 Font_Printf(136, y1 + 16, Text_GetString(NULL, 0, glc_text_ui, 0xC));
-            } else if (D_84A030E0 == 0xA) {
+            } else if (selected_map_node == 0xA) {
                 Font_Printf(136, y1 + 16, Text_GetString(NULL, 0, glc_text_ui, 0xD));
             } else {
-                temp_v0 = D_84A02F00[D_84A030E0].unk_22;
-                if (temp_v0 >= 0x1E) {
-                    Text_SetStringToken(0x24, Text_GetString(NULL, 0, glc_text_trainer_names, temp_v0));
-                } else if (temp_v0 >= 0) {
-                    Text_SetStringToken(0x24, Text_GetString(NULL, 0, glc_text_ui, temp_v0));
+                current_node_file_number = castle_map_nodes[selected_map_node].file_number;
+                if (current_node_file_number >= 0x1E) {
+                    Text_SetStringToken(0x24, Text_GetString(NULL, 0, glc_text_trainer_names, current_node_file_number));
+                } else if (current_node_file_number >= 0) {
+                    Text_SetStringToken(0x24, Text_GetString(NULL, 0, glc_text_ui, current_node_file_number));
                 } else {
                     Text_SetStringToken(0x24, " ");
                 }
 
-                temp_v0 = D_84A02F00[D_84A030E0 + 1].unk_22;
-                if (temp_v0 >= 0x1E) {
-                    Text_SetStringToken(0x29, Text_GetString(NULL, 0, glc_text_trainer_names, temp_v0));
-                } else if (temp_v0 >= 0) {
-                    Text_SetStringToken(0x29, Text_GetString(NULL, 0, glc_text_ui, temp_v0));
+                current_node_file_number = castle_map_nodes[selected_map_node + 1].file_number;
+                if (current_node_file_number >= 0x1E) {
+                    Text_SetStringToken(0x29, Text_GetString(NULL, 0, glc_text_trainer_names, current_node_file_number));
+                } else if (current_node_file_number >= 0) {
+                    Text_SetStringToken(0x29, Text_GetString(NULL, 0, glc_text_ui, current_node_file_number));
                 } else {
                     Text_SetStringToken(0x29, " ");
                 }
@@ -184,48 +184,49 @@ void Glc_DrawRoomDescription(void) {
 void Glc_DrawTrainerIntroPanels(void) {
     UNUSED s32 pad[3];
     s32 i;
-    char* var_s0;
-    unk_D_84A02F00* sp58 = &D_84A02F00[D_84A030E0];
+    char* important_trainer_title;
+    CastleMapNode* hovered_map_node = &castle_map_nodes[selected_map_node];
 
     for (i = 0; i < 4; i++) {
-        if (D_84A03138[i].unk_00 != 0) {
-            s16 tmp = D_84A03138[i].unk_02;
+        if (current_node_trainers[i].loaded != 0) {
+            s16 trainer_portrait_x = current_node_trainers[i].portrait_x;
 
             gSPDisplayList(gDisplayListHead++, D_8006F518);
 
-            Glc_DrawScaledTextureRgba(tmp, 0xF0, 0x80, 0x40, 0x80, D_3009290, 2.0f);
-            Glc_DrawScaledTextureRgba(tmp, 0x130, 0x80, 0x40, 0x80, D_300A290, 2.0f);
-            Glc_DrawScaledTextureRgba(tmp, 0x170, 0x80, 0x40, 0x80, D_300B290, 2.0f);
-            Glc_DrawScaledTextureRgba(tmp + 8, 0x138, 0x70, 0x38, 0x80, D_84A03138[i].unk_04 + 0x208, 2.0f);
-            Glc_DrawScaledTextureRgba(tmp + 8, 0x170, 0x70, 0x38, 0x80, D_84A03138[i].unk_04 + 0x1008, 2.0f);
+            Glc_DrawScaledTextureRgba(trainer_portrait_x, 240, 128, 64, 128, D_3009290, 2.0f);
+            Glc_DrawScaledTextureRgba(trainer_portrait_x, 304, 128, 64, 128, D_300A290, 2.0f);
+            Glc_DrawScaledTextureRgba(trainer_portrait_x, 368, 128, 64, 128, D_300B290, 2.0f);
+            Glc_DrawScaledTextureRgba(trainer_portrait_x + 8, 312, 112, 56, 128, current_node_trainers[i].portrait + 0x208, 2.0f);
+            Glc_DrawScaledTextureRgba(trainer_portrait_x + 8, 368, 112, 56, 128, current_node_trainers[i].portrait + 0x1008, 2.0f);
 
             gSPDisplayList(gDisplayListHead++, D_8006F630);
 
             Font_BeginTranslucentTextRendering();
-
-            if ((D_84A030E0 >= 8) || (i == 3)) {
+            // special titles for Gym leaders
+            // Condition reads as "is the player in the Elite Four room OR is panel the gym leader's?"
+            if ((selected_map_node >= 8) || (i == 3)) {
                 Font_SetActive(8, 0);
 
-                if (sp58->unk_20 >= 0) {
-                    var_s0 = Text_GetString(NULL, 0, glc_text_ui, sp58->unk_20);
+                if (hovered_map_node->boss_title >= 0) {
+                    important_trainer_title = Text_GetString(NULL, 0, glc_text_ui, hovered_map_node->boss_title);
                 } else {
-                    var_s0 = " ";
+                    important_trainer_title = " ";
                 }
 
-                Font_Printf((tmp - (Font_MeasureTextExtent(8, 0, var_s0) / 2)) + 0x40, 0xF4, var_s0);
+                Font_Printf((trainer_portrait_x - (Font_MeasureTextExtent(8, 0, important_trainer_title) / 2)) + 64, 244, important_trainer_title);
             }
 
             Font_SetActive(4, 0);
 
-            if ((i == 3) && (D_84A030E0 < 8)) {
-                Font_Printf(tmp + 8, 0x10C, Text_GetString(NULL, 0, glc_text_ui, 8));
+            if ((i == 3) && (selected_map_node < 8)) {
+                Font_Printf(trainer_portrait_x + 8, 268, Text_GetString(NULL, 0, glc_text_ui, 8));
             } else {
-                Font_Printf(tmp + 8, 0x10C, Text_GetString(NULL, 0, glc_text_ui, 0xF));
+                Font_Printf(trainer_portrait_x + 8, 268, Text_GetString(NULL, 0, glc_text_ui, 0xF));
             }
 
             Font_SetActive(0x10, 0);
-            Font_Printf((tmp - (Font_MeasureTextExtent(0x10, 0, D_84A03138[i].unk_08) / 2)) + 0x40, 0x11C,
-                          D_84A03138[i].unk_08);
+            Font_Printf((trainer_portrait_x - (Font_MeasureTextExtent(0x10, 0, current_node_trainers[i].name_length) / 2)) + 64, 284,
+                          current_node_trainers[i].name_length);
             Font_EndTexturedTextRendering();
         }
     }
@@ -259,16 +260,16 @@ void Glc_DrawMapBorder(void) {
 
 void Glc_DrawRoomMarkers(void) {
     s32 i;
-    s32 var_a0;
-    s32 var_s2;
-    unk_D_84A02F00* var_s0;
+    s32 node_alpha;
+    s32 backward_index;
+    CastleMapNode* node;
 
-    if (D_84A030E0 < 9) {
-        var_s0 = &D_84A02F00[0];
-        var_s2 = 9;
+    if (selected_map_node < 9) {
+        node = &castle_map_nodes[0];
+        backward_index = 9;
     } else {
-        var_s0 = &D_84A02F00[9];
-        var_s2 = 3;
+        node = &castle_map_nodes[9];
+        backward_index = 3;
     }
 
     gDPPipeSync(gDisplayListHead++);
@@ -279,27 +280,27 @@ void Glc_DrawRoomMarkers(void) {
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gSPClearGeometryMode(gDisplayListHead++, G_ZBUFFER | G_LIGHTING);
 
-    for (; var_s2 > 0; var_s2--, var_s0++) {
-        if (var_s0->unk_01 != 0) {
-            var_a0 = 0xFF;
-            if (var_s0->unk_01 == 1) {
-                var_a0 = (s32)((COSS(var_s0->unk_12) + 1.0f) * 96.0f);
-                var_a0 += 0x3F;
-                var_s0->unk_12 += 0x200;
+    for (; backward_index > 0; backward_index--, node++) {
+        if (node->node_state != 0) {
+            node_alpha = 0xFF;
+            if (node->node_state == 1) {
+                node_alpha = (s32)((COSS(node->plusing) + 1.0f) * 96.0f);
+                node_alpha += 63;
+                node->plusing += 0x200;
             } else {
-                var_s0->unk_12 = 0;
-                var_s0->unk_01--;
+                node->plusing = 0;
+                node->node_state--;
             }
 
-            gDPSetEnvColor(gDisplayListHead++, var_s0->unk_18.r, var_s0->unk_18.g, var_s0->unk_18.b, var_a0);
+            gDPSetEnvColor(gDisplayListHead++, node->node_color.r, node->node_color.g, node->node_color.b, node_alpha);
 
-            if (var_s0->unk_00 == 9) {
+            if (node->unk_00 == 9) {
                 gDPSetPrimColor(gDisplayListHead++, 0, 0, 255, 255, 0, 255);
             } else {
                 gDPSetPrimColor(gDisplayListHead++, 0, 0, 255, 255, 255, 255);
             }
 
-            Glc_DrawScaledTextureIa8(var_s0->unk_0A, var_s0->unk_0C, var_s0->unk_0E * 2, var_s0->unk_10 * 2, var_s0->unk_1C, 2.0f);
+            Glc_DrawScaledTextureIa8(node->node_x, node->node_y, node->node_width * 2, node->node_height * 2, node->node_texture, 2.0f);
         }
     }
 
@@ -307,17 +308,17 @@ void Glc_DrawRoomMarkers(void) {
 }
 
 void Glc_DrawRoomLabels(void) {
-    s32 var_s2;
-    char* var_s0;
-    unk_D_84A02F00* var_s1;
+    s32 backwards_index;
+    char* label;
+    CastleMapNode* node;
     s16 tmp;
 
-    if (D_84A030E0 < 9) {
-        var_s1 = &D_84A02F00[0];
-        var_s2 = 8;
+    if (selected_map_node < 9) {
+        node = &castle_map_nodes[0];
+        backwards_index = 8;
     } else {
-        var_s1 = &D_84A02F00[9];
-        var_s2 = 3;
+        node = &castle_map_nodes[9];
+        backwards_index = 3;
     }
 
     Font_BeginTranslucentTextRendering();
@@ -325,17 +326,17 @@ void Glc_DrawRoomLabels(void) {
     Font_SetActive(4, 0);
     Gfx_SetPrimColor(0x50, 0x64, 0xDC, 0xFF);
 
-    for (; var_s2 > 0; var_s2--, var_s1++) {
-        if (var_s1->unk_01 != 0) {
-            if (var_s1->unk_22 >= 0x1E) {
-                var_s0 = Text_GetString(NULL, 0, glc_text_trainer_names, var_s1->unk_22);
-            } else if (var_s1->unk_22 >= 0) {
-                var_s0 = Text_GetString(NULL, 0, glc_text_ui, var_s1->unk_22);
+    for (; backwards_index > 0; backwards_index--, node++) {
+        if (node->node_state != 0) {
+            if (node->file_number >= 0x1E) {
+                label = Text_GetString(NULL, 0, glc_text_trainer_names, node->file_number);
+            } else if (node->file_number >= 0) {
+                label = Text_GetString(NULL, 0, glc_text_ui, node->file_number);
             } else {
-                var_s0 = " ";
+                label = " ";
             }
-            tmp = var_s1->unk_02 - (Font_MeasureTextExtent(4, 0, var_s0) / 2);
-            Font_Printf(tmp, var_s1->unk_04, var_s0);
+            tmp = node->x - (Font_MeasureTextExtent(4, 0, label) / 2);
+            Font_Printf(tmp, node->y, label);
         }
     }
 
@@ -343,89 +344,89 @@ void Glc_DrawRoomLabels(void) {
     Font_EndTexturedTextRendering();
 }
 
-void Glc_DrawRoomInfoPanel(unk_D_84A02F00* arg0, u8 arg1, u8 arg2) {
-    char* sp54;
+void Glc_DrawRoomInfoPanel(CastleMapNode* node, u8 alpha1, u8 alpha2) {
+    char* string;
 
-    if (arg0->unk_24 != NULL) {
+    if (node->alpha != NULL) {
         gSPDisplayList(gDisplayListHead++, D_8006F518);
-        gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, arg1);
+        gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, alpha1);
 
-        Glc_DrawScaledTextureRgba(0x1F6, 0x160, 0x60, 0x30, 0x60, arg0->unk_24, 1.5f);
-        Glc_DrawScaledTextureRgba(0x1F6, 0x190, 0x60, 0x30, 0x60, arg0->unk_24 + 0x1000, 1.5f);
+        Glc_DrawScaledTextureRgba(502, 352, 96, 48, 96, node->alpha, 1.5f);
+        Glc_DrawScaledTextureRgba(502, 400, 96, 48, 96, node->alpha + 0x1000, 1.5f);
 
         gSPDisplayList(gDisplayListHead++, D_8006F558);
-        gDPSetEnvColor(gDisplayListHead++, arg0->unk_18.r, arg0->unk_18.g, arg0->unk_18.b, (arg2 * 0x96) / 255);
+        gDPSetEnvColor(gDisplayListHead++, node->node_color.r, node->node_color.g, node->node_color.b, (alpha2 * 0x96) / 255);
 
-        Gfx_DrawTextureIa16(0x166, 0x174, 0x10, 0x4C, D_300C290, 0x10, 0);
-        Gfx_DrawTexturedRectClipped(0x176, 0x174, 0x80, 0x4C, 0x1E0, 0, 0, 0x400, 0);
+        Gfx_DrawTextureIa16(358, 372, 16, 76, D_300C290, 0x10, 0);
+        Gfx_DrawTexturedRectClipped(374, 372, 128, 76, 480, 0, 0, 0x400, 0);
 
         gSPDisplayList(gDisplayListHead++, D_8006F630);
 
         Font_BeginTranslucentTextRendering();
         Font_EnableTwoCycleTexturing();
-        Gfx_SetEnvColor(0x8C, 0x90, 0x90, arg2);
-        Gfx_SetPrimColor(0xFF, 0xFF, 0xFF, arg2);
+        Gfx_SetEnvColor(0x8C, 0x90, 0x90, alpha2);
+        Gfx_SetPrimColor(0xFF, 0xFF, 0xFF, alpha2);
         Font_SetActive(8, 0);
 
-        if (arg0->unk_20 >= 0) {
-            sp54 = Text_GetString(NULL, 0, glc_text_ui, arg0->unk_20);
+        if (node->boss_title >= 0) {
+            string = Text_GetString(NULL, 0, glc_text_ui, node->boss_title);
         } else {
-            sp54 = " ";
+            string = " ";
         }
-        Font_Printf(0x1AE - (Font_MeasureTextExtent(8, 0, sp54) / 2), 0x17A, sp54);
+        Font_Printf(430 - (Font_MeasureTextExtent(8, 0, string) / 2), 378, string);
         Font_SetActive(0x20, 0);
 
-        if (arg0->unk_22 >= 0x1E) {
-            sp54 = Text_GetString(NULL, 0, glc_text_trainer_names, arg0->unk_22);
-        } else if (arg0->unk_22 >= 0) {
-            sp54 = Text_GetString(NULL, 0, glc_text_ui, arg0->unk_22);
+        if (node->file_number >= 0x1E) {
+            string = Text_GetString(NULL, 0, glc_text_trainer_names, node->file_number);
+        } else if (node->file_number >= 0) {
+            string = Text_GetString(NULL, 0, glc_text_ui, node->file_number);
         } else {
-            sp54 = " ";
+            string = " ";
         }
 
-        Font_Printf(0x1AE - (Font_MeasureTextExtent(0x20, 0, sp54) / 2), 0x196, sp54);
+        Font_Printf(430 - (Font_MeasureTextExtent(32, 0, string) / 2), 0x196, string);
         Font_DisableTwoCycleTexturing();
         Font_EndTexturedTextRendering();
     }
 }
 
-void Glc_DrawFinalRoomInfoPanel(unk_D_84A02F00* arg0, u8 arg1, u8 arg2) {
-    char* var_s0;
+void Glc_DrawEliteFourRoomInfoPanel(CastleMapNode* node, u8 alpha1, u8 alpha2) {
+    char* string;
 
     gSPDisplayList(gDisplayListHead++, D_8006F518);
-    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, arg1);
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, alpha1);
 
-    Glc_DrawScaledTextureRgba(0x1D6, 0x13E, 0x80, 0x1A, 0x80, arg0->unk_24, 1.28f);
-    Glc_DrawScaledTextureRgba(0x1D6, 0x158, 0x80, 0x1A, 0x80, arg0->unk_24 + 0xFA0, 1.28f);
-    Glc_DrawScaledTextureRgba(0x1D6, 0x172, 0x80, 0x1A, 0x80, arg0->unk_24 + 0x1F40, 1.28f);
-    Glc_DrawScaledTextureRgba(0x1D6, 0x18C, 0x80, 0x1A, 0x80, arg0->unk_24 + 0x2EE0, 1.28f);
-    Glc_DrawScaledTextureRgba(0x1D6, 0x1A6, 0x80, 0x1A, 0x80, arg0->unk_24 + 0x3E80, 1.28f);
+    Glc_DrawScaledTextureRgba(470, 318, 128, 26, 128, node->alpha, 1.28f);
+    Glc_DrawScaledTextureRgba(470, 344, 128, 26, 128, node->alpha + 0xFA0, 1.28f);
+    Glc_DrawScaledTextureRgba(470, 370, 128, 26, 128, node->alpha + 0x1F40, 1.28f);
+    Glc_DrawScaledTextureRgba(470, 396, 128, 26, 128, node->alpha + 0x2EE0, 1.28f);
+    Glc_DrawScaledTextureRgba(470, 422, 128, 26, 128, node->alpha + 0x3E80, 1.28f);
 
     gSPDisplayList(gDisplayListHead++, D_8006F558);
-    gDPSetEnvColor(gDisplayListHead++, arg0->unk_18.r, arg0->unk_18.g, arg0->unk_18.b, (arg2 * 0x96) / 255);
+    gDPSetEnvColor(gDisplayListHead++, node->node_color.r, node->node_color.g, node->node_color.b, (alpha2 * 0x96) / 255);
     gDPLoadTextureBlock(gDisplayListHead++, D_300C290, G_IM_FMT_IA, G_IM_SIZ_16b, 16, 76, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                         G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
-    Gfx_DrawTexturedRectClipped(0x15A, 0x174, 0x10, 0x4C, 0, 0, 0x400, 0x400, 0);
-    Gfx_DrawTexturedRectClipped(0x16A, 0x174, 0x6C, 0x4C, 0x1E0, 0, 0, 0x400, 0);
+    Gfx_DrawTexturedRectClipped(346, 372, 16, 76, 0, 0, 0x400, 0x400, 0);
+    Gfx_DrawTexturedRectClipped(362, 0x174, 108, 76, 480, 0, 0, 0x400, 0);
 
     gSPDisplayList(gDisplayListHead++, D_8006F630);
 
     Font_BeginTranslucentTextRendering();
     Font_EnableTwoCycleTexturing();
-    Gfx_SetEnvColor(0x8C, 0x90, 0x90, arg2);
-    Gfx_SetPrimColor(0xFF, 0xFF, 0xFF, arg2);
+    Gfx_SetEnvColor(0x8C, 0x90, 0x90, alpha2);
+    Gfx_SetPrimColor(0xFF, 0xFF, 0xFF, alpha2);
     Font_SetActive(0x10, 0);
 
-    if (arg0->unk_22 >= 0x1E) {
-        var_s0 = Text_GetString(NULL, 0, glc_text_trainer_names, arg0->unk_22);
-    } else if (arg0->unk_22 >= 0) {
-        var_s0 = Text_GetString(NULL, 0, glc_text_ui, arg0->unk_22);
+    if (node->file_number >= 0x1E) {
+        string = Text_GetString(NULL, 0, glc_text_trainer_names, node->file_number);
+    } else if (node->file_number >= 0) {
+        string = Text_GetString(NULL, 0, glc_text_ui, node->file_number);
     } else {
-        var_s0 = " ";
+        string = " ";
     }
 
-    Font_Printf(0x198 - (Font_MeasureTextExtent(0x10, 0, var_s0) / 2), 0x196, var_s0);
+    Font_Printf(408 - (Font_MeasureTextExtent(16, 0, string) / 2), 406, string);
     Font_DisableTwoCycleTexturing();
     Font_EndTexturedTextRendering();
 }
@@ -435,73 +436,73 @@ void Glc_UpdateRoomInfoPanelFade(void) {
 
     if (D_84A030E8 > 0) {
         if (D_84A030E8 < 0xFF) {
-            if (D_84A030E0 == 0xA) {
-                Glc_DrawFinalRoomInfoPanel(&D_84A02F00[D_84A030E0], D_84A030E8, D_84A030E8);
+            if (selected_map_node == 0xA) {
+                Glc_DrawEliteFourRoomInfoPanel(&castle_map_nodes[selected_map_node], D_84A030E8, D_84A030E8);
             } else {
-                Glc_DrawRoomInfoPanel(&D_84A02F00[D_84A030E0], D_84A030E8, D_84A030E8);
+                Glc_DrawRoomInfoPanel(&castle_map_nodes[selected_map_node], D_84A030E8, D_84A030E8);
             }
         } else if (D_84A030E4 == 0) {
-            if (D_84A030E0 == 0xA) {
-                Glc_DrawFinalRoomInfoPanel(&D_84A02F00[D_84A030E0], 0xFF, 0xFF);
+            if (selected_map_node == 0xA) {
+                Glc_DrawEliteFourRoomInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF);
             } else {
-                Glc_DrawRoomInfoPanel(&D_84A02F00[D_84A030E0], 0xFF, 0xFF);
+                Glc_DrawRoomInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF);
             }
         } else {
             sp1F = ((D_84A030E4 * 0xFF) / 4) & 0xFF;
-            if (D_84A030E0 == 0xA) {
-                Glc_DrawFinalRoomInfoPanel(&D_84A02F00[D_84A030E0], 0xFF, 0xFF - sp1F);
+            if (selected_map_node == 0xA) {
+                Glc_DrawEliteFourRoomInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF - sp1F);
             } else {
-                Glc_DrawRoomInfoPanel(&D_84A02F00[D_84A030E0], 0xFF, 0xFF - sp1F);
+                Glc_DrawRoomInfoPanel(&castle_map_nodes[selected_map_node], 0xFF, 0xFF - sp1F);
             }
 
-            if (D_84A03188 == 0xA) {
-                Glc_DrawFinalRoomInfoPanel(&D_84A02F00[D_84A03188], sp1F, sp1F);
+            if (current_hover_node_index == 0xA) {
+                Glc_DrawEliteFourRoomInfoPanel(&castle_map_nodes[current_hover_node_index], sp1F, sp1F);
             } else {
-                Glc_DrawRoomInfoPanel(&D_84A02F00[D_84A03188], sp1F, sp1F);
+                Glc_DrawRoomInfoPanel(&castle_map_nodes[current_hover_node_index], sp1F, sp1F);
             }
         }
     }
 }
 
 void Glc_UpdateMapCursor(void) {
-    s16 sp1E;
-    s16 sp1C;
-    unk_D_84A02F00* temp_a1 = &D_84A02F00[D_84A030E0];
+    s16 x;
+    s16 y;
+    CastleMapNode* node = &castle_map_nodes[selected_map_node];
 
     if (D_84A030E4 == 0) {
-        sp1E = temp_a1->unk_06 - 0x20;
-        sp1C = temp_a1->unk_08 - 0xD;
+        x = node->unk_06 - 0x20;
+        y = node->unk_08 - 0xD;
     } else {
-        sp1E = ((((D_84A02F00[D_84A03188].unk_06 - temp_a1->unk_06) * D_84A030E4) / 4) + temp_a1->unk_06) - 0x20;
-        sp1C = ((((D_84A02F00[D_84A03188].unk_08 - temp_a1->unk_08) * D_84A030E4) / 4) + temp_a1->unk_08) - 0xD;
+        x = ((((castle_map_nodes[current_hover_node_index].unk_06 - node->unk_06) * D_84A030E4) / 4) + node->unk_06) - 0x20;
+        y = ((((castle_map_nodes[current_hover_node_index].unk_08 - node->unk_08) * D_84A030E4) / 4) + node->unk_08) - 0xD;
 
         D_84A030E4--;
-        if ((D_84A030E4 == 0) && ((D_84A030E0 == 8) || (D_84A030E0 == 9))) {
+        if ((D_84A030E4 == 0) && ((selected_map_node == 8) || (selected_map_node == 9))) {
             StageContext_SetClearColor(1);
             StageFade_StartFromTransparent(8);
         }
     }
 
-    Ui_DrawAnimatedTextureMarker(sp1E - 3, sp1C);
+    Ui_DrawAnimatedTextureMarker(x - 3, y);
 }
 
 void Glc_Draw(void) {
     BgStage_DrawFrame();
 
-    if (D_84A030E0 < 9) {
-        if (D_84A030F0 == 0) {
-            Gfx_DrawTiledRgba16Image(D_84A03174);
-        } else if (D_84A030F0 == 0xFF) {
-            Gfx_DrawTiledRgba16Image(D_84A03178);
+    if (selected_map_node < 9) {
+        if (glc_to_e4_transition == 0) {
+            Gfx_DrawTiledRgba16Image(gym_leader_castle_texture);
+        } else if (glc_to_e4_transition == 0xFF) {
+            Gfx_DrawTiledRgba16Image(elite_four_texture);
         } else {
-            Glc_DrawBackgroundCrossfade(D_84A03174, D_84A03178, D_84A030F0);
-            if (D_84A030F0 < 0xFF) {
-                D_84A030F0 += 5;
+            Glc_DrawBackgroundCrossfade(gym_leader_castle_texture, elite_four_texture, glc_to_e4_transition);
+            if (glc_to_e4_transition < 0xFF) {
+                glc_to_e4_transition += 5;
             }
         }
     } else {
         Gfx_DrawTiledRgba16Image(D_84A0317C);
-        D_84A030F0 = 0xFF;
+        glc_to_e4_transition = 0xFF;
     }
 
     if (D_800AE540.unk_11F2 == 1) {
@@ -528,102 +529,102 @@ s32 func_84A02074(void) {
 
 s32 Glc_SelectRoom(void) {
     s16 var_s4;
-    s16 var_s1;
-    s16 var_s3;
-    unk_D_84A02F00* temp_s0;
+    s16 node_to_move_to;
+    s16 changed;
+    CastleMapNode* node;
 
     var_s4 = 0x1E;
-    var_s3 = 2;
+    changed = 2;
 
-    while (var_s3 == 2) {
-        var_s1 = -1;
-        temp_s0 = &D_84A02F00[D_84A030E0];
+    while (changed == 2) {
+        node_to_move_to = -1;
+        node = &castle_map_nodes[selected_map_node];
 
         Controller_PollInputs();
 
         if (func_84A02074() == 0) {
             if (StageContext_GetFadeMode() == 0) {
                 if (D_84A030E4 == 0) {
-                    D_84A03188 = D_84A030E0;
-                    if (D_84A030E0 == 0xB) {
+                    current_hover_node_index = selected_map_node;
+                    if (selected_map_node == 0xB) {
                         var_s4--;
                         if (var_s4 == 0) {
-                            var_s3 = 3;
+                            changed = 3;
                         }
                     } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_A)) {
                         Audio_PlaySoundEffectById(2);
-                        var_s3 = 3;
+                        changed = 3;
                     } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_B)) {
                         Audio_PlaySoundEffectById(3);
-                        if (temp_s0->unk_00 >= 0xA) {
-                            D_84A030E0 = 9;
+                        if (node->unk_00 >= 0xA) {
+                            selected_map_node = 9;
                             D_84A030E4 = 3;
                         } else {
-                            var_s3 = 1;
+                            changed = 1;
                         }
-                    } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_DUP) && (temp_s0->unk_14 != 0)) {
-                        var_s1 = temp_s0->unk_14 - 1;
-                    } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_DDOWN) && (temp_s0->unk_15 != 0)) {
-                        var_s1 = temp_s0->unk_15 - 1;
-                    } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_DLEFT) && (temp_s0->unk_16 != 0)) {
-                        var_s1 = temp_s0->unk_16 - 1;
-                    } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_DRIGHT) && (temp_s0->unk_17 != 0)) {
-                        var_s1 = temp_s0->unk_17 - 1;
+                    } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_DUP) && (node->up_neighbour != 0)) {
+                        node_to_move_to = node->up_neighbour - 1;
+                    } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_DDOWN) && (node->down_neighbour != 0)) {
+                        node_to_move_to = node->down_neighbour - 1;
+                    } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_DLEFT) && (node->left_neighbour != 0)) {
+                        node_to_move_to = node->left_neighbour - 1;
+                    } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_DRIGHT) && (node->right_neighbour != 0)) {
+                        node_to_move_to = node->right_neighbour - 1;
                     }
 
-                    if ((var_s1 >= 0) && (D_84A02F00[var_s1].unk_01 != 0)) {
+                    if ((node_to_move_to >= 0) && (castle_map_nodes[node_to_move_to].node_state != 0)) {
                         Audio_PlaySoundEffectById(1);
-                        D_84A030E0 = var_s1;
+                        selected_map_node = node_to_move_to;
                         D_84A030E4 = 3;
                     }
                 }
             } else if (StageContext_GetFadeMode() == 1) {
-                if (D_84A030E0 == 8) {
-                    D_84A030E0 = 0xA;
+                if (selected_map_node == 8) {
+                    selected_map_node = 0xA;
                 }
 
-                if (D_84A030E0 == 9) {
-                    D_84A030E0 = 7;
+                if (selected_map_node == 9) {
+                    selected_map_node = 7;
                 }
                 StageFade_StartFromOpaque(8);
             }
         }
         Glc_Draw();
     }
-    return var_s3;
+    return changed;
 }
 
 void Glc_LoadTrainerPanels(void) {
     s32 i;
     s32 var_a1;
     s32 var_s7;
-    TrainerData* var_s1;
+    TrainerData* trainer_data;
     s32 portrait_file_idx;
 
-    if (D_84A030E0 == 0xB) {
+    if (selected_map_node == 0xB) {
         var_s7 = 1;
     } else {
         var_s7 = 4;
     }
 
-    if (D_84A030E0 < 8) {
-        var_a1 = D_84A030E0 + 0xC;
+    if (selected_map_node < 8) {
+        var_a1 = selected_map_node + 12;
     } else {
-        var_a1 = D_84A030E0 + 0xA;
+        var_a1 = selected_map_node + 10;
     }
 
     if (D_800AE540.unk_11F2 != 0) {
         var_a1 += 0x1F;
     }
 
-    var_s1 = BinArchive_GetFile(D_84A03168, var_a1);
+    trainer_data = BinArchive_GetFile(D_84A03168, var_a1);
 
     for (i = 0; i < var_s7; i++) {
-        portrait_file_idx = (var_s1[i].gfx_file_idx >> 8) & 0xFF;
-        D_84A03138[i].unk_00 = 1;
-        D_84A03138[i].unk_02 = 0x280;
-        D_84A03138[i].unk_08 = var_s1[i].name1;
-        D_84A03138[i].unk_04 = BinArchive_GetFile(D_84A0316C, portrait_file_idx);
+        portrait_file_idx = (trainer_data[i].gfx_file_idx >> 8) & 0xFF;
+        current_node_trainers[i].loaded = 1;
+        current_node_trainers[i].portrait_x = 0x280;
+        current_node_trainers[i].name_length = trainer_data[i].name1;
+        current_node_trainers[i].portrait = BinArchive_GetFile(D_84A0316C, portrait_file_idx);
     }
 }
 
@@ -631,16 +632,16 @@ void Glc_ClearTrainerPanels(void) {
     s32 i;
 
     for (i = 0; i < 4; i++) {
-        D_84A03138[i].unk_00 = 0;
+        current_node_trainers[i].loaded = 0;
     }
 }
 
-void Glc_AnimateTrainerPanelsIn(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
+void Glc_AnimateTrainerPanelsIn(s16 panels_start, s16 panels_end, s16 timer, s16 x_increase) {
     s32 i;
 
-    while (arg2-- > 0) {
-        for (i = arg0; i <= arg1; i++) {
-            D_84A03138[i].unk_02 += arg3;
+    while (timer-- > 0) {
+        for (i = panels_start; i <= panels_end; i++) {
+            current_node_trainers[i].portrait_x += x_increase;
         }
         Controller_PollInputs();
         Glc_Draw();
@@ -649,8 +650,8 @@ void Glc_AnimateTrainerPanelsIn(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
 
 s32 GymLeaderCastle_ShowIntro(void) {
     s16 i;
-    s32 var_s1;
-    s32 var_s1_2 = 0;
+    s32 in_elite_four_challenge;
+    s32 castle_phase = 0;
 
     main_pool_push_state('itro');
 
@@ -664,7 +665,7 @@ s32 GymLeaderCastle_ShowIntro(void) {
     }
 
     Audio_PlayMusicIfChanged(0x2B);
-    if (D_84A030E0 == 0xB) {
+    if (selected_map_node == 0xB) {
         Glc_AnimateTrainerPanelsIn(0, 0, 6, -0x40);
     } else {
         Glc_AnimateTrainerPanelsIn(0, 3, 3, -0x40);
@@ -673,24 +674,24 @@ s32 GymLeaderCastle_ShowIntro(void) {
         Glc_AnimateTrainerPanelsIn(0, 0, 2, -0x40);
     }
 
-    while (var_s1_2 == 0) {
+    while (castle_phase == 0) {
         Controller_PollInputs();
         Glc_Draw();
         if (BTN_IS_PRESSED(gPlayer1Controller, BTN_A)) {
-            var_s1_2 = 1;
+            castle_phase = 1;
         } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_B)) {
-            if (D_84A030E0 == 0xB) {
-                var_s1_2 = 1;
+            if (selected_map_node == 0xB) {
+                castle_phase = 1;
             } else {
-                var_s1_2 = 2;
+                castle_phase = 2;
             }
         }
     }
 
-    if (var_s1_2 == 1) {
+    if (castle_phase == 1) {
         Audio_PlaySoundEffectById(0x1C);
-        var_s1 = 0;
-        if (D_84A030E0 == 0xB) {
+        in_elite_four_challenge = 0;
+        if (selected_map_node == 0xB) {
             Glc_AnimateTrainerPanelsIn(0, 0, 6, -0x40);
         } else {
             Glc_AnimateTrainerPanelsIn(3, 3, 2, -0x40);
@@ -702,9 +703,9 @@ s32 GymLeaderCastle_ShowIntro(void) {
         Glc_Draw();
     } else {
         Audio_PlaySoundEffectById(3);
-        var_s1 = 2;
+        in_elite_four_challenge = 2;
         Audio_StopMusic(0x12);
-        if (D_84A030E0 == 0xB) {
+        if (selected_map_node == 0xB) {
             Glc_AnimateTrainerPanelsIn(0, 0, 6, 0x40);
         } else {
             Glc_AnimateTrainerPanelsIn(0, 0, 2, 0x40);
@@ -729,7 +730,7 @@ s32 GymLeaderCastle_ShowIntro(void) {
 
     main_pool_pop_state('itro');
 
-    return var_s1;
+    return in_elite_four_challenge;
 }
 
 s32 Glc_AdvanceRoom(void) {
@@ -737,7 +738,7 @@ s32 Glc_AdvanceRoom(void) {
 
     if (D_800AE540.unk_0002 == 7) {
         Audio_PlayCategory11SoundCommand(0x01100015, 0, 0);
-        D_84A030F0 = 5;
+        glc_to_e4_transition = 5;
     }
 
     for (i = 1; i < 5; i++) {
@@ -754,14 +755,14 @@ s32 Glc_AdvanceRoom(void) {
     Audio_PlaySoundEffectById(0x01100011);
 
     if (D_800AE540.unk_0002 == 8) {
-        D_84A02F00[11].unk_01 = 0x3C;
+        castle_map_nodes[11].node_state = 0x3C;
     } else {
-        D_84A02F00[D_84A03180.unk_04].unk_01 = 0x3C;
+        castle_map_nodes[D_84A03180.unk_04].node_state = 0x3C;
     }
 
     if (D_84A03180.unk_04 == 8) {
-        D_84A02F00[9].unk_01 = 0x3C;
-        D_84A02F00[10].unk_01 = 0x3C;
+        castle_map_nodes[9].node_state = 0x3C;
+        castle_map_nodes[10].node_state = 0x3C;
     }
 
     for (i = 3; i >= 0; i--) {
@@ -770,8 +771,8 @@ s32 Glc_AdvanceRoom(void) {
         Glc_Draw();
     }
 
-    D_84A03188 = D_84A030E0;
-    D_84A030E0 += 1;
+    current_hover_node_index = selected_map_node;
+    selected_map_node += 1;
     D_84A030E4 = 3;
     return 2;
 }
@@ -804,10 +805,10 @@ s16 Glc_RunMenu(s16 arg0) {
     }
 
     D_800AE540.unk_0003 = 1;
-    if (D_84A030E0 < 8) {
-        D_800AE540.unk_0002 = D_84A030E0;
+    if (selected_map_node < 8) {
+        D_800AE540.unk_0002 = selected_map_node;
     } else {
-        D_800AE540.unk_0002 = D_84A030E0 - 2;
+        D_800AE540.unk_0002 = selected_map_node - 2;
     }
     return arg0;
 }
@@ -818,9 +819,9 @@ s16 Glc_InitMenu(s16 arg0) {
     s16 var_v1 = D_84A03180.unk_04;
 
     if (D_800AE540.unk_0002 < 8) {
-        D_84A030E0 = D_800AE540.unk_0002;
+        selected_map_node = D_800AE540.unk_0002;
     } else {
-        D_84A030E0 = D_800AE540.unk_0002 + 2;
+        selected_map_node = D_800AE540.unk_0002 + 2;
     }
 
     if (arg0 == 1) {
@@ -831,30 +832,30 @@ s16 Glc_InitMenu(s16 arg0) {
     }
 
     if (var_v1 >= 8) {
-        D_84A030F0 = 0xFF;
+        glc_to_e4_transition = 0xFF;
     } else {
-        D_84A030F0 = 0;
+        glc_to_e4_transition = 0;
     }
 
     for (i = 0; i <= var_v1; i++) {
-        D_84A02F00[i].unk_01 = 1;
+        castle_map_nodes[i].node_state = 1;
     }
 
-    if (D_84A02F00[8].unk_01 != 0) {
-        D_84A02F00[9].unk_01 = 1;
-        D_84A02F00[10].unk_01 = 1;
+    if (castle_map_nodes[8].node_state != 0) {
+        castle_map_nodes[9].node_state = 1;
+        castle_map_nodes[10].node_state = 1;
     }
 
     for (i = 0; i < 4; i++) {
-        D_84A03138[i].unk_00 = 0;
+        current_node_trainers[i].loaded = 0;
     }
 
     for (i = 0; i < 8; i++) {
-        D_84A02F00[i].unk_24 = BinArchive_GetFile(D_84A0316C, i + 2);
+        castle_map_nodes[i].alpha = BinArchive_GetFile(D_84A0316C, i + 2);
     }
 
-    D_84A02F00[10].unk_24 = D_300CC10;
-    D_84A02F00[11].unk_24 = BinArchive_GetFile(D_84A0316C, 0xE);
+    castle_map_nodes[10].alpha = D_300CC10;
+    castle_map_nodes[11].alpha = BinArchive_GetFile(D_84A0316C, 0xE);
     return sp2C;
 }
 
@@ -874,8 +875,8 @@ s32 GymLeaderCastle_Main(s32 arg0, UNUSED s32 arg1) {
     D_84A03168 = BinArchive_Open(0x898000, NULL, 1, 1);
     D_84A0316C = ASSET_LOAD2(battle_portraits, 1, 1);
     D_84A03170 = ASSET_LOAD2(backgrounds, 1, 1);
-    D_84A03174 = BinArchive_GetFile(D_84A03170, 0xD);
-    D_84A03178 = BinArchive_GetFile(D_84A03170, 0x10);
+    gym_leader_castle_texture = BinArchive_GetFile(D_84A03170, 0xD);
+    elite_four_texture = BinArchive_GetFile(D_84A03170, 0x10);
     D_84A0317C = BinArchive_GetFile(D_84A03170, 0xE);
     StageLoader_UpdateSegments();
 
