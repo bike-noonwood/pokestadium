@@ -589,7 +589,7 @@ s32 Glc_SelectRoom(void) {
                     selected_map_node = ELITE_4;
                 }
 
-                if (selected_map_node == ELITE_4) {
+                if (selected_map_node == ELITE_4_TO_GLC) {
                     selected_map_node = GIOVANNI;
                 }
                 StageFade_StartFromOpaque(8);
