@@ -10,12 +10,12 @@ void Gfx_DrawTexturedRect(s32 x1, s32 y1, s32 width, s32 height, s32 texture_ste
 void Gfx_FillRectRgb(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5, u8 arg6);
 void Gfx_FillRectRgba(s16 x1, s16 y1, s16 width, s16 height, u8 r, u8 g, u8 b, u8 alpha);
 void Gfx_DrawTextureRgba16(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode);
-void Gfx_DrawTextureRgba32(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, s16 arg5, s32 arg6);
-void Gfx_DrawTextureIa8(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, s16 arg5, s32 arg6);
+void Gfx_DrawTextureRgba32(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode);
+void Gfx_DrawTextureIa8(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode);
 void Gfx_DrawTextureIa16(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode);
-void Gfx_DrawTextureI4(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, s16 arg5, s32 arg6);
-void Gfx_DrawTextureI8(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, s16 arg5, s32 arg6);
-void Gfx_DrawTextureI16(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, s16 arg5, s32 arg6);
+void Gfx_DrawTextureI4(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode);
+void Gfx_DrawTextureI8(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode);
+void Gfx_DrawTextureI16(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode);
 void Gfx_DrawTextureRgba16Ia8(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, u8* texture_multi, s16 load_width, s32 texture_x_spread_mode);
 void Gfx_DrawTiledRgba16Image(u8* image);
 void Gfx_DrawRgba16ImageRegion(u32 arg0, s16 arg1, s16 arg2, s16 arg3, s16 arg4);

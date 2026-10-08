@@ -62,18 +62,18 @@ void Gfx_DrawTextureRgba16(s16 x1, s16 y1, s16 draw_width, s16 height, u8* textu
     Gfx_DrawTexturedRectClipped(x1, y1, draw_width, height, 0, 0, 1024, 1024, texture_spread_x_mode);
 }
 
-void Gfx_DrawTextureRgba32(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, s16 arg5, s32 arg6) {
-    gDPLoadTextureBlock(gDisplayListHead++, arg4, G_IM_FMT_RGBA, G_IM_SIZ_32b, arg5, arg3, 0,
+void Gfx_DrawTextureRgba32(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode) {
+    gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_RGBA, G_IM_SIZ_32b, load_width, height, 0,
                         G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                         G_TX_NOLOD);
 
-    Gfx_DrawTexturedRectClipped(arg0, arg1, arg2, arg3, 0, 0, 0x400, 0x400, arg6);
+    Gfx_DrawTexturedRectClipped(x1, y1, draw_width, height, 0, 0, 0x400, 0x400, texture_spread_x_mode);
 }
 
-void Gfx_DrawTextureIa8(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, s16 arg5, s32 arg6) {
-    gDPLoadTextureBlock(gDisplayListHead++, arg4, G_IM_FMT_IA, G_IM_SIZ_8b, arg5, arg3, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+void Gfx_DrawTextureIa8(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode) {
+    gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_IA, G_IM_SIZ_8b, load_width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                         G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-    Gfx_DrawTexturedRectClipped(arg0, arg1, arg2, arg3, 0, 0, 0x400, 0x400, arg6);
+    Gfx_DrawTexturedRectClipped(x1, y1, draw_width, height, 0, 0, 0x400, 0x400, texture_spread_x_mode);
 }
 
 void Gfx_DrawTextureIa16(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode) {
@@ -82,25 +82,25 @@ void Gfx_DrawTextureIa16(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture
     Gfx_DrawTexturedRectClipped(x1, y1, draw_width, height, 0, 0, 0x400, 0x400, texture_spread_x_mode);
 }
 
-void Gfx_DrawTextureI4(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, s16 arg5, s32 arg6) {
-    gDPLoadTextureBlock_4b(gDisplayListHead++, arg4, G_IM_FMT_I, arg5, arg3, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+void Gfx_DrawTextureI4(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode) {
+    gDPLoadTextureBlock_4b(gDisplayListHead++, texture, G_IM_FMT_I, load_width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                            G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
-    Gfx_DrawTexturedRectClipped(arg0, arg1, arg2, arg3, 0, 0, 0x400, 0x400, arg6);
+    Gfx_DrawTexturedRectClipped(x1, y1, draw_width, height, 0, 0, 0x400, 0x400, texture_spread_x_mode);
 }
 
-void Gfx_DrawTextureI8(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, s16 arg5, s32 arg6) {
-    gDPLoadTextureBlock(gDisplayListHead++, arg4, G_IM_FMT_I, G_IM_SIZ_8b, arg5, arg3, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+void Gfx_DrawTextureI8(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode) {
+    gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_I, G_IM_SIZ_8b, load_width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                         G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
-    Gfx_DrawTexturedRectClipped(arg0, arg1, arg2, arg3, 0, 0, 0x400, 0x400, arg6);
+    Gfx_DrawTexturedRectClipped(x1, y1, draw_width, height, 0, 0, 0x400, 0x400, texture_spread_x_mode);
 }
 
-void Gfx_DrawTextureI16(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8* arg4, s16 arg5, s32 arg6) {
-    gDPLoadTextureBlock(gDisplayListHead++, arg4, G_IM_FMT_I, G_IM_SIZ_16b, arg5, arg3, 0, G_TX_NOMIRROR | G_TX_CLAMP,
+void Gfx_DrawTextureI16(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, s16 load_width, s32 texture_spread_x_mode) {
+    gDPLoadTextureBlock(gDisplayListHead++, texture, G_IM_FMT_I, G_IM_SIZ_16b, load_width, height, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                         G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
-    Gfx_DrawTexturedRectClipped(arg0, arg1, arg2, arg3, 0, 0, 0x400, 0x400, arg6);
+    Gfx_DrawTexturedRectClipped(x1, y1, draw_width, height, 0, 0, 0x400, 0x400, texture_spread_x_mode);
 }
 
 void Gfx_DrawTextureRgba16Ia8(s16 x1, s16 y1, s16 draw_width, s16 height, u8* texture, u8* texture_multi, s16 load_width, s32 texture_x_spread_mode) {
