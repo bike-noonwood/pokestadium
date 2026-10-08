@@ -367,11 +367,11 @@ void Font_LoadSet(s32 arg0, s32 arg1, s32 arg2) {
     }
 }
 
-FontContext* Font_Init(s32 arg0, s32 arg1) {
-    font_context = main_pool_alloc_with_func(sizeof(*font_context), arg1, 'PRNT', Font_ResetContext);
+FontContext* Font_Init(s32 load_size, s32 side) {
+    font_context = main_pool_alloc_with_func(sizeof(*font_context), side, 'PRNT', Font_ResetContext);
     bzero(font_context, sizeof(*font_context));
     font_context->unk_48 = ASSET_LOAD2(fonts, 1, 1);
-    Font_LoadSizes(arg0);
+    Font_LoadSizes(load_size);
 
     return font_context;
 }
