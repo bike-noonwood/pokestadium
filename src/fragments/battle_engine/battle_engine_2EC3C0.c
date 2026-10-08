@@ -1233,17 +1233,15 @@ void BattleScene_TickQueueList3Selector2OrCFromB10(Battler* arg0) {
     }
 }
 
-#ifdef NON_MATCHING
 void func_8430506C(Battler* arg0) {
-    unk_D_8438E7B0* ptr;
+    s32 pad3;
     s32 sp48;
-    s32 pad2[1];
+    s32 sp44;
     s32 sp40;
     BattlerState* sp3C;
     s32 pad[2];
     Battler* sp30;
     BattleMonRuntime* sp28;
-    unk_D_8438E7B0* ptr2;
 
     sp48 = 0xA5;
     sp40 = BattleScene_GetParticipantSideIndex(arg0) == 0;
@@ -1271,11 +1269,10 @@ void func_8430506C(Battler* arg0) {
         }
 
         if ((D_843C4E44 == 0) || (gBattleMoveFailed != 0)) {
-            ptr = D_84384570[sp40];
-            ptr2 = ptr;
-            D_84390020 = &ptr2->unk_000[sp48];
+            sp44 = 0xB0;
+            D_84390020 = &D_84384570[sp40]->unk_000[sp48];
             if (sp3C->unk_34 & 0x200) {
-                D_84390020 = &ptr2->unk_000[0xB0];
+                D_84390020 = &D_84384570[sp40]->unk_000[sp44];
             }
         } else if (!(sp3C->unk_34 & 1)) {
             BattleAnim_SetModelEventTrackFromRow(D_84390010[sp40], 0xA8);
@@ -1289,9 +1286,6 @@ void func_8430506C(Battler* arg0) {
         }
     }
 }
-#else
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/battle_engine/battle_engine_2EC3C0/func_8430506C.s")
-#endif
 
 void BattleScene_TickRow14PlayMoveEffectEnd(Battler* arg0) {
     s32 sp2C;
