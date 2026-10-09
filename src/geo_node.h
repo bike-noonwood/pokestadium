@@ -5,8 +5,8 @@
 #include "src/memory.h"
 
 typedef struct unk_func_80011B94 {
-    /* 0x00 */ DisplayNodeHeader node;
-    /* 0x18 */ Gfx* unk_18;
+    /* 0x00 */ DisplayNodeHeader display_node_header;
+    /* 0x18 */ Gfx* gfx;
 } unk_func_80011B94; // size = 0x1C
 
 typedef struct unk_D_8690A610_018 {
@@ -59,6 +59,9 @@ void GeoCamera_SetPerspective(unk_D_86002F34_00C* arg0, f32 arg1, f32 arg2, f32 
 void GeoCamera_SetEyeAtUp(unk_D_86002F34_00C* arg0, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6, s32 arg7);
 void GeoCamera_SetBackground(unk_D_86002F34_00C* arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4, u8 arg5);
 void GeoCamera_SetBackgroundTexture(unk_D_86002F34_00C* arg0, s16 arg1, s16 arg2, s32 arg3, u32 arg4);
-void GraphNode_AppendChild(GraphNode* arg0, GraphNode* arg1);
+void GraphNode_AppendChild(GraphNode* parent, GraphNode* child);
+void GraphNode_RemoveChild(GraphNode* arg0, GraphNode* arg1);
+GraphNode* GraphNode_GetChildAtIndex(GraphNode* arg0, s32 arg1);
+
 
 #endif // _11BA0_H_

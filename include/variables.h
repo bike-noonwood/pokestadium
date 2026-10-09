@@ -227,6 +227,11 @@ extern u8 D_2000C80[];
 extern u8 D_2000D80[];
 extern u8 D_2000E80[];
 extern u8 D_2000F80[];
+
+#define bottom_left_sc_tex D_2000C80
+#define bottom_right_sc_tex D_2000D80
+#define top_right_sc_tex D_2000E80
+#define top_left_sc_tex D_2000F80
 extern u8 D_2006C00[];
 extern u8 D_2007500[];
 extern u8 D_20003C0[];

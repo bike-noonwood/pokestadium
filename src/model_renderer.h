@@ -25,7 +25,7 @@ typedef struct unk_func_8001C248 {
 void ModelRenderer_InitDisplayRoots(void);
 void ModelRenderer_AttachDisplayObject(DisplayObject* arg0);
 void ModelRenderer_AttachSecondaryDisplayObject(DisplayObject* arg0);
-void Model_InitDisplayObject(DisplayObject* arg0, s16 arg1, s16 arg2, ModelNodeView* arg3);
+void Model_InitDisplayObject(DisplayObject* display_object, s16 root_id, s16 object_type, ModelNodeView* child);
 void ModelRenderer_ClearDisplayObject(DisplayObject* arg0);
 s32 ModelAnim_SetAnimation(DisplayObject* arg0, s32 arg1);
 s32 ModelAnim_SetEventTrack(DisplayObject* arg0, s32 arg1);

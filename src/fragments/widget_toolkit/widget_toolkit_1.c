@@ -101,7 +101,7 @@ void Widget_CountdownInit(void) {
     D_8780FC30 = GeoNode_CreateDisplayList(sp1C, NULL, 4, D_87806390);
     D_8780FAC8.node.renderFlags |= 8;
 
-    GraphNode_AppendChild(&D_8780FAC8.node, &D_8780FC30->node);
+    GraphNode_AppendChild(&D_8780FAC8.node, &D_8780FC30->display_node_header);
     MainPool_FinalizeAllocation(sp1C);
 }
 
@@ -136,7 +136,7 @@ void Widget_CountdownUpdate(void) {
                 var_s2 = 1;
                 Widget_CountdownComputeScale(D_8780FAC0, D_8780FAC2, &D_8780FAC8.scale.x, &D_8780FAC8.scale.y);
             } else {
-                D_8780FC30->unk_18 = D_87806390;
+                D_8780FC30->gfx = D_87806390;
             }
 
             if (D_8780FAC0 < 0) {
@@ -156,7 +156,7 @@ void Widget_CountdownUpdate(void) {
     if ((var_s2 != 0) && (D_8780FAC0 < 4)) {
         temp_s1 = D_878064E0[D_8780FAC0];
         temp_v0 = Gfx_AllocDisplayList(sizeof(Gfx) * 48);
-        D_8780FC30->unk_18 = temp_v0;
+        D_8780FC30->gfx = temp_v0;
 
         gSPSetGeometryMode(&temp_v0[0], G_CULL_BACK);
         gSPTexture(&temp_v0[1], 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
