@@ -31,14 +31,14 @@ u16 Diorama_IsModelInCameraCone(unk_D_86002F34_00C* arg0, DisplayObject* arg1, s
     sp5C = (SINS((sp44 + arg2) + 0x8000) * arg4) + sp38;
 
     sp6C =
-        ((sp54 - arg1->unk_024.z) * (sp5C - arg1->unk_024.x)) - ((sp50 - arg1->unk_024.z) * (sp60 - arg1->unk_024.x));
+        ((sp54 - arg1->position.z) * (sp5C - arg1->position.x)) - ((sp50 - arg1->position.z) * (sp60 - arg1->position.x));
 
     arg11 = arg1;
 
-    sp68 = ((sp50 - arg11->unk_024.z) * (sp38 - arg11->unk_024.x)) -
-           ((sp40 - arg11->unk_024.z) * (sp5C - arg11->unk_024.x));
-    sp64 = ((sp40 - arg11->unk_024.z) * (sp60 - arg11->unk_024.x)) -
-           ((sp54 - arg11->unk_024.z) * (sp38 - arg11->unk_024.x));
+    sp68 = ((sp50 - arg11->position.z) * (sp38 - arg11->position.x)) -
+           ((sp40 - arg11->position.z) * (sp5C - arg11->position.x));
+    sp64 = ((sp40 - arg11->position.z) * (sp60 - arg11->position.x)) -
+           ((sp54 - arg11->position.z) * (sp38 - arg11->position.x));
 
     if (((sp6C >= 0.0f) && (sp68 >= 0.0f) && (sp64 >= 0.0f)) || ((sp6C <= 0.0f) && (sp68 <= 0.0f) && (sp64 <= 0.0f))) {
         sp34 = 1;

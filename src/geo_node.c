@@ -333,27 +333,27 @@ DisplayObject* GeoNode_CreateModelPart(MainPoolState* arg0, DisplayObject* arg1,
     }
 
     if (arg1 != NULL) {
-        arg1->unk_018 = 0;
-        arg1->unk_01A = arg2;
-        arg1->unk_024 = *arg3;
-        arg1->unk_030 = *arg5;
-        arg1->unk_01E = *arg4;
-        arg1->unk_01D = 0xFF;
-        arg1->unk_01C = 0;
-        arg1->unk_0A6 = 0;
-        arg1->unk_0A0.rgba = 0xFFFFFF00;
-        arg1->unk_03C.rgba = 0xFFFFFF00;
-        arg1->unk_040.unk_00 = 0;
-        arg1->unk_040.unk_04 = NULL;
-        arg1->unk_040.unk_08 = 0;
-        arg1->unk_040.unk_0C = 0x10000;
-        arg1->unk_040.unk_12 = 0;
-        arg1->unk_054.unk_00 = 0;
-        arg1->unk_054.unk_04 = NULL;
-        arg1->unk_054.unk_08 = 0;
-        arg1->unk_054.unk_0A = 0;
-        GeoNode_Init(&arg1->unk_000, 0x16);
-        arg1->unk_000.unk_02 |= 0x60;
+        arg1->rootId = 0;
+        arg1->objectType = arg2;
+        arg1->position = *arg3;
+        arg1->scale = *arg5;
+        arg1->rotation = *arg4;
+        arg1->lodFraction = 0xFF;
+        arg1->textureMode = 0;
+        arg1->effectSlot = 0;
+        arg1->fogColor.rgba = 0xFFFFFF00;
+        arg1->textureTint.rgba = 0xFFFFFF00;
+        arg1->transformAnim.animationId = 0;
+        arg1->transformAnim.data = NULL;
+        arg1->transformAnim.frameFixed = 0;
+        arg1->transformAnim.speedFixed = 0x10000;
+        arg1->transformAnim.lastRenderFrame = 0;
+        arg1->eventTrack.trackId = 0;
+        arg1->eventTrack.data = NULL;
+        arg1->eventTrack.frame = 0;
+        arg1->eventTrack.lastRenderFrame = 0;
+        GeoNode_Init(&arg1->node, 0x16);
+        arg1->node.renderFlags |= 0x60;
     }
 
     return arg1;
@@ -411,7 +411,7 @@ unk_func_80011B94* GeoNode_CreateDisplayList(MainPoolState* arg0, unk_func_80011
     if (arg1 != NULL) {
         arg1->unk_18 = arg3;
         GeoNode_Init(arg1, 0x19);
-        arg1->unk_00.unk_03 = arg2;
+        arg1->unk_00.renderLayer = arg2;
     }
 
     return arg1;

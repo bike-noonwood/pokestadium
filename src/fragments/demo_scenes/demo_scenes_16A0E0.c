@@ -314,19 +314,19 @@ s32 FirstClearBonus_UpdateScene(void) {
 
     switch (D_86B10BD0.unk_00) {
         case 0:
-            D_86B10850.unk_000.unk_02 |= 0x20;
-            D_86B10850.unk_000.unk_01 |= 1;
+            D_86B10850.node.renderFlags |= 0x20;
+            D_86B10850.node.flags |= 1;
             D_86B10BD0.unk_00++;
             break;
 
         case 1:
-            if ((D_86B10850.unk_040.unk_08 >> 0x10) == 0xA) {
+            if ((D_86B10850.transformAnim.frameFixed >> 0x10) == 0xA) {
                 Audio_StartMusicTrack(0x38);
             }
 
-            if ((D_86B10850.unk_040.unk_08 >> 0x10) == 0x72) {
+            if ((D_86B10850.transformAnim.frameFixed >> 0x10) == 0x72) {
                 D_86B10BD0.unk_08 = 0;
-                D_86B10850.unk_000.unk_02 &= 0xFFDF;
+                D_86B10850.node.renderFlags &= 0xFFDF;
                 FirstClearBonus_HideDialogBox();
                 Audio_StartMusicTrack(0x13);
                 D_86B10BD0.unk_00++;
@@ -336,7 +336,7 @@ s32 FirstClearBonus_UpdateScene(void) {
         case 2:
             if (D_86B10BE0.unk_00 == 0xFF) {
                 D_86B10BD0.unk_08 = 0;
-                D_86B10850.unk_000.unk_02 |= 0x20;
+                D_86B10850.node.renderFlags |= 0x20;
                 FirstClearBonus_ShowDialogBox();
                 D_86B10BD0.unk_00++;
             }
@@ -410,10 +410,10 @@ void FirstClearBonus_InitScene(void) {
 
     ModelAnim_SetAnimation(&D_86B10850, 0);
 
-    D_86B10850.unk_000.unk_02 &= ~0x20;
-    D_86B10850.unk_000.unk_01 &= ~1;
+    D_86B10850.node.renderFlags &= ~0x20;
+    D_86B10850.node.flags &= ~1;
 
-    Vec3f_SetComponentsDuplicate(&D_86B10850.unk_024, 0.0f, 11.0f, -105.0f);
+    Vec3f_SetComponentsDuplicate(&D_86B10850.position, 0.0f, 11.0f, -105.0f);
 }
 
 s32 Stage_ShowFirstClearBonusScene(void) {

@@ -4208,7 +4208,7 @@ void BattleAnim_PlayOwnerCry(Battler* arg0, s16 arg1) {
 }
 
 void BattleAnim_PlaySpeciesSequence33(Battler* arg0) {
-    s16 sp1E = arg0->unk_000.unk_01A;
+    s16 sp1E = arg0->unk_000.objectType;
 
     BattleScene_GetParticipantModelWidth(arg0);
     Audio_PlayCommand(0x33, sp1E, 0);
@@ -4219,8 +4219,8 @@ void Battle_TriggerTrainerPresentationCue(Battler* arg0) {
 }
 
 void BattleAnim_PlaySpeciesReactionSound(Battler* arg0, BattleMonRuntime* arg1, s32 arg2) {
-    func_800479C0(arg1->unk_5A, arg0->unk_000.unk_01A, arg2);
-    func_80040A70(arg1, arg1->unk_5A, arg0->unk_000.unk_01A, arg2);
+    func_800479C0(arg1->unk_5A, arg0->unk_000.objectType, arg2);
+    func_80040A70(arg1, arg1->unk_5A, arg0->unk_000.objectType, arg2);
 }
 
 void BattleScene_ConfigureAudioChannelGroupsByTeam(void) {
@@ -4595,7 +4595,7 @@ void BattleScene_StartBattleMusic(void) {
 }
 
 void BattleAnim_PlayBattleSequenceById(Battler* arg0, s32 arg1) {
-    s16 sp1E = arg0->unk_000.unk_01A;
+    s16 sp1E = arg0->unk_000.objectType;
 
     if ((BattleScene_IsPartnerPikachu(arg0) != 0) && (arg1 == 0x32)) {
         Audio_PlayCommand(0x32, 0xC8, 0);
@@ -4925,7 +4925,7 @@ void BattleAnim_ResetDisplayContexts(void) {
 }
 
 Particle* BattleAnim_GetOwnerContextParticle(DisplayObject* arg0) {
-    return arg0->unk_000.unk_14;
+    return arg0->node.callbackArg;
 }
 
 DisplayObject* BattleAnim_AllocOwnerDisplayContext(Particle* arg0) {
@@ -4943,7 +4943,7 @@ DisplayObject* BattleAnim_AllocOwnerDisplayContext(Particle* arg0) {
     if (var_v0 >= 0) {
         temp_a0 = &D_843903D0[var_v0];
         D_84391A50[var_v0] = 1;
-        temp_a0->unk_000.unk_14 = arg0;
+        temp_a0->node.callbackArg = arg0;
     } else {
         temp_a0 = NULL;
     }
@@ -4981,7 +4981,7 @@ DisplayObject* BattleAnim_AllocParticleDisplayContext(Particle* arg0) {
         sp1C = &D_84391A90[var_a2];
         D_84392030[var_a2] = 1;
         Particle_SetFlags(arg0, 0x400);
-        sp1C->unk_000.unk_14 = arg0;
+        sp1C->node.callbackArg = arg0;
     } else {
         sp1C = NULL;
     }
@@ -5022,13 +5022,13 @@ void BattleAnim_BindModelAnim(DisplayObject* arg0, s16 arg1) {
 
 void BattleAnim_BindModelAnimReversed(DisplayObject* arg0, s16 arg1) {
     ModelAnim_BindTransformCurve(arg0, 0, gBattleAnimAssetPointers[arg1], -0x10000);
-    ModelAnim_SetFrame(arg0, arg0->unk_040.unk_04->unk_0A - 1);
+    ModelAnim_SetFrame(arg0, arg0->transformAnim.data->endFrame - 1);
 }
 
 s32 BattleAnim_IsModelAnimComplete(DisplayObject* arg0) {
     s32 ret = 0;
 
-    if (arg0->unk_040.unk_08 == 0) {
+    if (arg0->transformAnim.frameFixed == 0) {
         ret = 1;
     }
     return ret;

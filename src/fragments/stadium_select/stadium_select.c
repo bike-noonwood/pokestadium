@@ -703,7 +703,7 @@ void StadiumSelect_DrawSelectionCorners(s16 arg0, s16 arg1, s16 arg2, s16 arg3, 
 
 s32 StadiumSelect_IconGeoPostCallback(s32 arg0, unk_func_80011B94* arg1) {
     if (arg0 == 5) {
-        s32 idx = D_8006F09C->unk_000.unk_14;
+        s32 idx = D_8006F09C->node.callbackArg;
 
         gDPPipeSync(gDisplayListHead++);
 
@@ -772,23 +772,23 @@ void StadiumSelect_RenderFrame(s32 arg0, s32 arg1, f32 arg2) {
     if (arg0 < 0xB) {
         var_v0 = ((10 - arg0) * -0x5000) / 10;
         for (i = 0; i < 3; i++) {
-            D_84103458[i].unk_01E.x = var_v0;
+            D_84103458[i].rotation.x = var_v0;
         }
 
         for (i = 3; i < 6; i++) {
-            D_84103458[i].unk_01E.x = -var_v0;
+            D_84103458[i].rotation.x = -var_v0;
         }
     } else {
         var_v0 = ((arg0 - 10) * -0x5000) / 10;
         for (i = 0; i < 3; i++) {
             if (i != D_84103CC8) {
-                D_84103458[i].unk_01E.x = var_v0;
+                D_84103458[i].rotation.x = var_v0;
             }
         }
 
         for (i = 3; i < 6; i++) {
             if (i != D_84103CC8) {
-                D_84103458[i].unk_01E.x = -var_v0;
+                D_84103458[i].rotation.x = -var_v0;
             }
         }
     }
@@ -886,10 +886,10 @@ void StadiumSelect_BuildCupIconGrid(void) {
     Model_InitDisplayObject(&D_84103458[3], 0, 0, D_84103CE8);
     Model_InitDisplayObject(&D_84103458[4], 0, 0, D_84103CEC);
     Model_InitDisplayObject(&D_84103458[5], 0, 0, D_84103CEC);
-    Vec3f_SetComponentsDuplicate(&D_84103458->unk_024, -80.0f, 113.0f, -579.0f);
-    Vec3f_SetComponentsDuplicate(&D_84103458[3].unk_024, -80.0f, -29.0f, -579.0f);
-    Vec3f_SetComponentsDuplicate(&D_84103458[4].unk_024, -236.0f, 42.0f, -579.0f);
-    Vec3f_SetComponentsDuplicate(&D_84103458[5].unk_024, 100.0f, 42.0f, -579.0f);
+    Vec3f_SetComponentsDuplicate(&D_84103458->position, -80.0f, 113.0f, -579.0f);
+    Vec3f_SetComponentsDuplicate(&D_84103458[3].position, -80.0f, -29.0f, -579.0f);
+    Vec3f_SetComponentsDuplicate(&D_84103458[4].position, -236.0f, 42.0f, -579.0f);
+    Vec3f_SetComponentsDuplicate(&D_84103458[5].position, 100.0f, 42.0f, -579.0f);
 }
 
 s16 StadiumSelect_HandleInput(void) {
@@ -993,7 +993,7 @@ void StadiumSelect_InitGeoLayouts(void) {
     ptr = &D_84103458[0];
     for (i = 0; i < 6; ptr++, i++) {
         ModelRenderer_AttachDisplayObject(ptr);
-        D_84103458[i].unk_000.unk_14 = i;
+        D_84103458[i].node.callbackArg = i;
     }
 }
 
