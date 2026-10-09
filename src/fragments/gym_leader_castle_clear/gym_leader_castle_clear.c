@@ -35,16 +35,16 @@ typedef struct unk_D_83102218 {
 } unk_D_83102218; // size = 0xC
 
 typedef struct unk_D_83102224 {
-    /* 0x00 */ s16 unk_00;
-    /* 0x02 */ s16 unk_02;
-    /* 0x04 */ s16 unk_04;
+    /* 0x00 */ s16 mode;
+    /* 0x02 */ s16 timer;
+    /* 0x04 */ s16 fade;
 } unk_D_83102224; // size = 0x8
 
 static BinArchive* background;
 static u8* bin_background;
-static s16 D_83101EE8;
+static s16 stage_fade_mode;
 static s16 D_83101EEA;
-static s16 D_83101EEC;
+static s16 tracking_icon_on;
 static s16 D_83101EEE;
 static s16 D_83101EF0;
 static GraphNode* D_83101EF4;
@@ -54,7 +54,7 @@ static unk_D_83101F00 D_83101F00[2];
 static unk_D_83101F00* D_83102210;
 static unk_D_83101F00* D_83102214;
 static unk_D_83102218 circle_fade;
-static unk_D_83102224 D_83102224;
+static unk_D_83102224 background_fade;
 
 static Vtx D_83101BE0[] = {
     VTX(-100, 14, 0, 0, 0, 0x78, 0x32, 0xFF, 0xFF),      VTX(-100, 0, 0, 0, 448, 0xBB, 0x28, 0x8E, 0xFF),
@@ -186,7 +186,7 @@ s32 Glc_GeoBannerCallback(s32 arg0, UNUSED GraphNode* arg1) {
 void Glc_UpdateColorKeyframe(unk_D_83101F00* arg0) {
     unk_D_83101E6C* ptr1;
     unk_D_83101E6C* ptr2;
-    f32 var_fv1;
+    f32 scale;
 
     switch (arg0->unk_16A) {
         case 1:
@@ -202,7 +202,7 @@ void Glc_UpdateColorKeyframe(unk_D_83101F00* arg0) {
             arg0->unk_17A = ptr2->unk_10 + (((ptr1->unk_10 - ptr2->unk_10) * arg0->unk_16C) / arg0->unk_16E);
             arg0->unk_17C = ptr2->unk_12 + (((ptr1->unk_12 - ptr2->unk_12) * arg0->unk_16C) / arg0->unk_16E);
 
-            var_fv1 = ptr2->unk_04 + (((ptr1->unk_04 - ptr2->unk_04) * arg0->unk_16C) / arg0->unk_16E);
+            scale = ptr2->unk_04 + (((ptr1->unk_04 - ptr2->unk_04) * arg0->unk_16C) / arg0->unk_16E);
 
             if (arg0->unk_16C <= 0) {
                 arg0->unk_170++;
@@ -216,7 +216,7 @@ void Glc_UpdateColorKeyframe(unk_D_83101F00* arg0) {
                 arg0->unk_17A = ptr1->unk_10;
                 arg0->unk_17C = ptr1->unk_12;
 
-                var_fv1 = ptr1->unk_04;
+                scale = ptr1->unk_04;
 
                 if (arg0->unk_16C == -1) {
                     arg0->unk_16E = 0;
@@ -225,7 +225,7 @@ void Glc_UpdateColorKeyframe(unk_D_83101F00* arg0) {
                 }
             }
 
-            Vec3f_SetComponentsDuplicate(&arg0->unk_000.unk_030, var_fv1, var_fv1, var_fv1);
+            Vec3f_SetComponentsDuplicate(&arg0->unk_000.unk_030, scale, scale, scale);
             break;
 
         case 0:
@@ -378,20 +378,20 @@ void Glc_StartCircleWipe(s16 start) {
 }
 
 void Glc_InitBackgroundFade(void) {
-    D_83102224.unk_00 = 0;
-    D_83102224.unk_02 = 0;
-    D_83102224.unk_04 = 0xC0;
+    background_fade.mode = 0;
+    background_fade.timer = 0;
+    background_fade.fade = 0xC0;
 }
 
 void Glc_UpdateBackgroundFade(void) {
-    switch (D_83102224.unk_00) {
+    switch (background_fade.mode) {
         case 1:
-            D_83102224.unk_02--;
-            D_83102224.unk_04 = ((D_83102224.unk_02 * -0x3F) / 10) + 0xFF;
-            if (D_83102224.unk_02 <= 0) {
-                D_83102224.unk_00 = 2;
-                D_83102224.unk_02 = 0;
-                D_83102224.unk_04 = 0xFF;
+            background_fade.timer--;
+            background_fade.fade = ((background_fade.timer * -0x3F) / 10) + 0xFF;
+            if (background_fade.timer <= 0) {
+                background_fade.mode = 2;
+                background_fade.timer = 0;
+                background_fade.fade = 0xFF;
             }
             break;
 
@@ -430,18 +430,18 @@ void Glc_DrawFadedBackground(u8* texture, s16 alpha) {
 }
 
 void Glc_DrawBackground(void) {
-    if (D_83102224.unk_04 < 0xFF) {
-        Glc_DrawFadedBackground(bin_background, D_83102224.unk_04);
+    if (background_fade.fade < 0xFF) {
+        Glc_DrawFadedBackground(bin_background, background_fade.fade);
     } else {
         Gfx_DrawTiledRgba16Image(bin_background);
     }
 }
 
-void Glc_StartBackgroundFade(s16 arg0) {
-    D_83102224.unk_00 = arg0;
-    if (D_83102224.unk_00 == 1) {
-        D_83102224.unk_02 = 0xA;
-        D_83102224.unk_04 = 0xC0;
+void Glc_StartBackgroundFade(s16 mode) {
+    background_fade.mode = mode;
+    if (background_fade.mode == 1) {
+        background_fade.timer = 0xA;
+        background_fade.fade = 0xC0;
     }
 }
 
@@ -506,11 +506,11 @@ void Glc_DrawTrackingIcon(void) {
 }
 
 void Glc_ClearInitState(void) {
-    D_83101EE8 = 0;
+    stage_fade_mode = 0;
     if (D_800AE540.unk_11F2 != 0) {
-        D_83101EEC = 1;
+        tracking_icon_on = 1;
     } else {
-        D_83101EEC = 0;
+        tracking_icon_on = 0;
     }
     D_83101EF0 = -0x64;
     D_83101EEE = D_83101EF0;
@@ -522,7 +522,7 @@ void Glc_ClearDraw(void) {
     BgStage_DrawFrame();
     Glc_DrawBackground();
     Geo_RenderRootNode(D_83101EF4);
-    if (D_83101EEC != 0) {
+    if (tracking_icon_on != 0) {
         Glc_DrawTrackingIcon();
     }
     Glc_DrawCircleWipe();
@@ -532,10 +532,10 @@ void Glc_ClearDraw(void) {
 s32 Glc_ClearAdvanceState(void) {
     s32 sp1C = 1;
 
-    switch (D_83101EE8) {
+    switch (stage_fade_mode) {
         case 0:
             if (StageContext_GetFadeMode() == 0) {
-                D_83101EE8 = 1;
+                stage_fade_mode = 1;
                 D_83101EEA = 0;
                 Glc_InitObjectAnimation(D_83102210, 1);
             }
@@ -555,7 +555,7 @@ s32 Glc_ClearAdvanceState(void) {
                         }
 
                         if (D_83101EEA >= 0x1E) {
-                            D_83101EE8 = 2;
+                            stage_fade_mode = 2;
                             D_83101EEA = 0;
                             Glc_StartCircleWipe(0xF);
                             StageContext_SetClearColor(1);
