@@ -323,7 +323,7 @@ void BattlePrepBadgeAward_RevealStep(unk_D_84B25A90* arg0) {
     }
 }
 
-void BattlePrepBadgeAward_SpawnSparkleParticle(unk_D_84B25A90* arg0, unk_D_86002F58_004_000* arg1, s16 arg2) {
+void BattlePrepBadgeAward_SpawnSparkleParticle(unk_D_84B25A90* arg0, DisplayObject* arg1, s16 arg2) {
     u16 sp26;
     f32 temp_fv0;
 
@@ -415,7 +415,7 @@ void BattlePrepBadgeAward_Update(unk_D_84B25A90* arg0) {
     }
 }
 
-void BattlePrepBadgeAward_InitDisplayObjects(unk_D_84B25A90* arg0, unk_D_86002F58_004_000* arg1) {
+void BattlePrepBadgeAward_InitDisplayObjects(unk_D_84B25A90* arg0, DisplayObject* arg1) {
     s32 i;
 
     arg0->unk_04 = arg1;

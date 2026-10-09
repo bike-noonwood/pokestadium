@@ -21,7 +21,7 @@
 #include "PR/rcp.h"
 
 static GraphNode* D_82D09FF0;
-static unk_D_86002F58_004_000 D_82D09FF8[8];
+static DisplayObject D_82D09FF8[8];
 static Pak_PortStatus D_82D0AB38[4];
 static ModeSettings D_82D0AB90;
 static u16 D_82D0AB98;
@@ -2758,7 +2758,7 @@ void Pak_PollPortStatus(void) {
 void TransferPak_InitMenuGraphics(void) {
     s32 i;
     MemoryBlock* temp_v0 = MainPool_AllocState(main_pool_get_available(), 0);
-    unk_D_86002F58_004_000* var_s1;
+    DisplayObject* var_s1;
 
     D_82D09FF0 = process_geo_layout(temp_v0, &D_82D06FA4);
     D_82D0ABAC = process_geo_layout(temp_v0, &D_82D07710);

@@ -197,7 +197,7 @@ s32 Intro_LightAngleCallbackB(s32 arg0, GraphNode* arg1) {
 }
 
 s32 Intro_FogColorCallback(s32 arg0, GraphNode* arg1) {
-    unk_D_86002F58_004_000* ptr = (unk_D_86002F58_004_000*)arg1;
+    DisplayObject* ptr = (DisplayObject*)arg1;
 
     if (arg0 == 2) {
         ptr->unk_03C.rgba = D_86B0FA3C.rgba;
@@ -307,7 +307,7 @@ void Intro_SetupStaticCamera(void) {
     }
 }
 
-s32 Intro_StepRotationOvershoot(unk_D_86002F58_004_000* arg0, s16 arg1, s16 arg2) {
+s32 Intro_StepRotationOvershoot(DisplayObject* arg0, s16 arg1, s16 arg2) {
     if (arg1 > 0) {
         arg0->unk_01E.y -= arg1;
         if ((arg0->unk_01E.y < arg2) && ((arg2 - arg1) < arg0->unk_01E.y)) {
@@ -322,7 +322,7 @@ s32 Intro_StepRotationOvershoot(unk_D_86002F58_004_000* arg0, s16 arg1, s16 arg2
     return 0;
 }
 
-s32 Intro_StepRotationToTarget(unk_D_86002F58_004_000* arg0, s16 arg1, s16 arg2) {
+s32 Intro_StepRotationToTarget(DisplayObject* arg0, s16 arg1, s16 arg2) {
     if ((((arg0->unk_01E.y - arg2) / 182) < 0x3D) && (((arg0->unk_01E.y - arg2) / 182) >= 0)) {
         arg1 = (arg0->unk_01E.y - arg2) / 9;
     }

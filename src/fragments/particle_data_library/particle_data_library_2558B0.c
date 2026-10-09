@@ -79,7 +79,7 @@ static s32 D_81004B50;
 static s32 D_81004B54;
 
 
-void Particle31_ResetSlot(unk_D_86002F58_004_000* arg0, s32 arg1) {
+void Particle31_ResetSlot(DisplayObject* arg0, s32 arg1) {
     u8 var_v0 = arg0->unk_0A6;
     s32 pad[2];
     Vec3f sp50 = D_8100410C;
@@ -103,7 +103,7 @@ void Particle31_ResetSlot(unk_D_86002F58_004_000* arg0, s32 arg1) {
     D_810047E0[var_v0 & 1][arg1].scale = sp38;
 }
 
-void Particle31_ResetAllSlots(unk_D_86002F58_004_000* arg0) {
+void Particle31_ResetAllSlots(DisplayObject* arg0) {
     s32 i;
 
     for (i = 0; i < 10; i++) {
@@ -317,7 +317,7 @@ Gfx* func_810010BC(Gfx* gfx, unk_D_810047E0* arg1, unk_arg2_func_81001D80* arg2,
     f32 sp104;
     f32 sp100;
     f32 spFC;
-    unk_D_86002F58_004_000* ptr;
+    DisplayObject* ptr;
 
     sp294 = Gfx_AllocDisplayList(0x40);
     MtxF_ExtractScale(&sp14C, &D_8006F088->unk_60.mtxf);

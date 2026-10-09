@@ -18,8 +18,8 @@ static void* D_82E019B4;
 static GraphNode* D_82E019B8;
 static GraphNode* D_82E019BC;
 static GraphNode* D_82E019C0;
-static unk_D_86002F58_004_000 D_82E019C8[4];
-static unk_D_86002F58_004_000 D_82E01F68[3];
+static DisplayObject D_82E019C8[4];
+static DisplayObject D_82E01F68[3];
 static ModeSettings D_82E023A0;
 static s16 D_82E023A8;
 static s16 D_82E023AA;
@@ -333,8 +333,8 @@ void CupSelect_RenderFrame(s32 arg0, s32 arg1) {
 
 void CupSelect_BuildDivisionList(void) {
     s32 i;
-    unk_D_86002F58_004_000* var_s1;
-    unk_D_86002F58_004_000* var_s2;
+    DisplayObject* var_s1;
+    DisplayObject* var_s2;
 
     for (var_s1 = &D_82E019C8[0], i = 0; i < 4; i++, var_s1++) {
         Model_InitDisplayObject(var_s1, 0, 0, D_82E019BC);
@@ -418,7 +418,7 @@ s32 CupSelect_Loop(void) {
 void CupSelect_InitGeoLayouts(void) {
     MemoryBlock* temp_v0 = MainPool_AllocState(main_pool_get_available(), 0);
     s32 i;
-    unk_D_86002F58_004_000* var_s2;
+    DisplayObject* var_s2;
 
     D_82E019B8 = process_geo_layout(temp_v0, &D_82E01110);
     D_82E019BC = process_geo_layout(temp_v0, &D_82E01800);

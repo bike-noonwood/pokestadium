@@ -360,7 +360,7 @@ s32 Gallery_SetCameraAngleOffsetsAlternate(s32 arg0, unk_func_8003013C_arg1* arg
     return 0;
 }
 
-s32 Gallery_SetSceneModelNode(s32 arg0, unk_D_86002F58_004_000* arg1) {
+s32 Gallery_SetSceneModelNode(s32 arg0, DisplayObject* arg1) {
     if (arg0 == 0) {
         D_80075F80->unk_20 = arg1;
     }

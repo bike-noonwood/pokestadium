@@ -60,8 +60,8 @@ typedef struct unk_D_86B0EBD8 {
 typedef struct unk_D_86B0EBDC {
     /* 0x000 */ unk_D_86002F30* unk_000;
     /* 0x004 */ unk_D_86002F30* unk_004;
-    /* 0x008 */ unk_D_86002F58_004_000 unk_008;
-    /* 0x170 */ unk_D_86002F58_004_000 unk_170;
+    /* 0x008 */ DisplayObject unk_008;
+    /* 0x170 */ DisplayObject unk_170;
     /* 0x2D8 */ s32 unk_2D8;
     /* 0x2DC */ s32 unk_2DC;
     /* 0x2E0 */ char unk2E0[0x4];

@@ -914,7 +914,7 @@ void BattlePrepRoster_PositionIconsDouble(unk_D_84B25A28* arg0) {
     Vec3f_SetComponentsDuplicate(&arg0->unk_04[9].unk_024, 96.0f, -96.0f, -289.0f);
 }
 
-s32 BattlePrepRoster_InitDisplayObjects(unk_D_84B25A28* arg0, unk_D_86002F58_004_000* arg1) {
+s32 BattlePrepRoster_InitDisplayObjects(unk_D_84B25A28* arg0, DisplayObject* arg1) {
     s32 i;
     s16 var_a1;
 

@@ -27,7 +27,7 @@
 
 typedef struct unk_D_8690A69C {
     /* 0x000 */ unk_D_86002F58_004_000_010_024* unk_000;
-    /* 0x004 */ unk_D_86002F58_004_000 unk_004;
+    /* 0x004 */ DisplayObject unk_004;
     /* 0x16C */ s32 unk_16C;
 } unk_D_8690A69C; // size = 0x170
 
@@ -368,7 +368,7 @@ s32 GalleryCamera_BgAngleCallbackB(s32 arg0, GraphNode* arg1) {
 }
 
 s32 GalleryCamera_FogColorCallback(s32 arg0, GraphNode* arg1) {
-    unk_D_86002F58_004_000* ptr = (unk_D_86002F58_004_000*)arg1;
+    DisplayObject* ptr = (DisplayObject*)arg1;
 
     if (arg0 == 2) {
         ptr->unk_03C.rgba = D_8690A68C.rgba;

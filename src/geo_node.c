@@ -326,10 +326,10 @@ unk_D_86002F34_alt7* GeoNode_CreateDisplayListPart(MainPoolState* arg0, unk_D_86
     return arg1;
 }
 
-unk_D_86002F58_004_000* GeoNode_CreateModelPart(MainPoolState* arg0, unk_D_86002F58_004_000* arg1, s16 arg2, Vec3f* arg3,
+DisplayObject* GeoNode_CreateModelPart(MainPoolState* arg0, DisplayObject* arg1, s16 arg2, Vec3f* arg3,
                                       Vec3s* arg4, Vec3f* arg5) {
     if (arg0 != 0) {
-        arg1 = MainPool_AllocAligned(arg0, sizeof(unk_D_86002F58_004_000), 4);
+        arg1 = MainPool_AllocAligned(arg0, sizeof(DisplayObject), 4);
     }
 
     if (arg1 != NULL) {

@@ -43,7 +43,7 @@ static void* D_84103448;
 static void* D_8410344C;
 static Vtx* D_84103450;
 static GraphNode* D_84103454;
-static unk_D_86002F58_004_000 D_84103458[6];
+static DisplayObject D_84103458[6];
 static s16 D_84103CC8;
 static unk_D_80068BB0* D_84103CD0[6];
 static GraphNode* D_84103CE8;
@@ -979,8 +979,8 @@ void StadiumSelect_Loop(void) {
 
 void StadiumSelect_InitGeoLayouts(void) {
     s32 i;
-    unk_D_86002F58_004_000* ptr;
-    unk_D_86002F58_004_000* ptr2;
+    DisplayObject* ptr;
+    DisplayObject* ptr2;
     MemoryBlock* temp_v0 = MainPool_AllocState(main_pool_get_available(), 0);
 
     D_84103454 = process_geo_layout(temp_v0, D_8410254C);

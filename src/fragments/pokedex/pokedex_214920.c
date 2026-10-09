@@ -33,7 +33,7 @@ static char** D_888267A4;
 static char** D_888267A8;
 static char** D_888267AC;
 static char** D_888267B0;
-static unk_D_86002F58_004_000 D_888267B8;
+static DisplayObject D_888267B8;
 static unk_func_8001B1FC* D_88826920;
 static unk_func_80007444* D_88826924;
 static unk_func_80007444* D_88826928;

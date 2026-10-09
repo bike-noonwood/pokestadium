@@ -22,11 +22,11 @@ void ModelAnim_ResetEventContext(void);
 void ModelAnim_BeginEventContext(unk_D_86002F58_004_000_054* arg0, u16 arg1, s32 arg2);
 void ModelAnim_EndEventContext(void);
 void ModelAnim_GetEventAtFrame(unk_D_86002F34_alt11_018** arg0, unk_D_86002F34_alt11_018* arg1, s32 arg2);
-void ModelAnim_ClearEventTrack(unk_D_86002F58_004_000* arg0);
-s16 ModelAnim_BindEventTrack(unk_D_86002F58_004_000* arg0, s16 arg1, s32 arg2);
-void ModelAnim_SetEventFrame(unk_D_86002F58_004_000* arg0, s16 arg1);
-s32 ModelAnim_IsEventFrame(unk_D_86002F58_004_000* arg0, s16 arg1);
-s32 ModelAnim_IsEventTrackNearEnd(unk_D_86002F58_004_000* arg0);
-s32 ModelAnim_IsEventTrackDone(unk_D_86002F58_004_000* arg0);
+void ModelAnim_ClearEventTrack(DisplayObject* arg0);
+s16 ModelAnim_BindEventTrack(DisplayObject* arg0, s16 arg1, s32 arg2);
+void ModelAnim_SetEventFrame(DisplayObject* arg0, s16 arg1);
+s32 ModelAnim_IsEventFrame(DisplayObject* arg0, s16 arg1);
+s32 ModelAnim_IsEventTrackNearEnd(DisplayObject* arg0);
+s32 ModelAnim_IsEventTrackDone(DisplayObject* arg0);
 
 #endif // _18140_H_

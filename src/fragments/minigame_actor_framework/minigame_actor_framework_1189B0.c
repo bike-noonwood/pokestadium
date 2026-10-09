@@ -175,7 +175,7 @@ void MiniActor_UpdateAnimation(MiniActor* poke) {
     }
 }
 
-void MiniActor_SnapAnimToLastFrame(unk_D_86002F58_004_000* arg0) {
+void MiniActor_SnapAnimToLastFrame(DisplayObject* arg0) {
     ModelAnim_SetFrame(arg0, arg0->unk_040.unk_04->unk_0A - 1);
 }
 

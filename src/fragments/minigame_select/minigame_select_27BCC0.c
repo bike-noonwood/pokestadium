@@ -941,7 +941,7 @@ void MiniGameSelect_CreateCursor(void) {
     ptr->unk_01 &= ~1;
 }
 
-void MiniGameSelect_UpdateCursor(unk_D_86002F58_004_000* a0) {
+void MiniGameSelect_UpdateCursor(DisplayObject* a0) {
     unk_D_8250A308* arg0 = (unk_D_8250A308*)a0;
     s32 var_v0;
 

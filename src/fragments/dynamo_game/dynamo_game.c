@@ -20,19 +20,19 @@
 #include "src/stage_loader.h"
 #include "src/controller.h"
 
-static unk_D_86002F58_004_000 D_865092E0;
-static unk_D_86002F58_004_000 D_86509448;
-static unk_D_86002F58_004_000 D_865095B0;
-static unk_D_86002F58_004_000 D_86509718;
-static unk_D_86002F58_004_000 D_86509880;
-static unk_D_86002F58_004_000 D_865099E8;
-static unk_D_86002F58_004_000 D_86509B50;
-static unk_D_86002F58_004_000 D_86509CB8;
-static unk_D_86002F58_004_000 D_86509E20;
-static unk_D_86002F58_004_000 D_86509F88;
-static unk_D_86002F58_004_000 D_8650A0F0;
-static unk_D_86002F58_004_000 D_8650A258;
-static unk_D_86002F58_004_000 D_8650A3C0;
+static DisplayObject D_865092E0;
+static DisplayObject D_86509448;
+static DisplayObject D_865095B0;
+static DisplayObject D_86509718;
+static DisplayObject D_86509880;
+static DisplayObject D_865099E8;
+static DisplayObject D_86509B50;
+static DisplayObject D_86509CB8;
+static DisplayObject D_86509E20;
+static DisplayObject D_86509F88;
+static DisplayObject D_8650A0F0;
+static DisplayObject D_8650A258;
+static DisplayObject D_8650A3C0;
 
 static unk_D_864027C0 D_86502C20[] = {
     { -60.0f, 7.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0, 0xA00, 0 },
@@ -41,7 +41,7 @@ static unk_D_864027C0 D_86502C20[] = {
     { 60.0f, 7.5f, 0.0f, 1.0f, 1.0f, 1.0f, 0, -0xA00, 0 },
 };
 
-static unk_D_86002F58_004_000* D_86502CA0[] = {
+static DisplayObject* D_86502CA0[] = {
     &D_865092E0, &D_86509448, &D_865095B0, &D_86509718, &D_86509880, &D_865099E8, &D_86509B50,
     &D_86509CB8, &D_86509E20, &D_86509F88, &D_8650A0F0, &D_8650A258, &D_8650A3C0,
 };
@@ -77,7 +77,7 @@ static u8 D_86502E70 = 0;
 
 unk_D_8650A528 D_8650A528[4];
 unk_D_8650A528* D_8650AB28;
-static unk_D_86002F58_004_000* D_8650AB2C;
+static DisplayObject* D_8650AB2C;
 unk_D_8650AB30 D_8650AB30[4];
 unk_D_8650AB30* D_8650AD70;
 

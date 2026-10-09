@@ -20,20 +20,20 @@ void ModelRenderer_InitDisplayRoots(void) {
     GeoNode_CreateContainer(0, &D_800AC858);
 }
 
-void ModelRenderer_AttachDisplayObject(unk_D_86002F58_004_000* arg0) {
+void ModelRenderer_AttachDisplayObject(DisplayObject* arg0) {
     GeoNode_CreateModelPart(NULL, arg0, 0, &D_8006F050, &D_8006F05C, &D_8006F064);
     GraphNode_AppendChild(&D_800AC840, &arg0->unk_000);
     arg0->unk_0A6 = 0;
     arg0->unk_000.unk_01 &= ~1;
 }
 
-void ModelRenderer_AttachSecondaryDisplayObject(unk_D_86002F58_004_000* arg0) {
+void ModelRenderer_AttachSecondaryDisplayObject(DisplayObject* arg0) {
     GeoNode_CreateModelPart(NULL, arg0, 0, &D_8006F050, &D_8006F05C, &D_8006F064);
     GraphNode_AppendChild(&D_800AC858, &arg0->unk_000);
     arg0->unk_000.unk_01 &= ~1;
 }
 
-void Model_InitDisplayObject(unk_D_86002F58_004_000* arg0, s16 arg1, s16 arg2, unk_D_86002F58_004_000_004* arg3) {
+void Model_InitDisplayObject(DisplayObject* arg0, s16 arg1, s16 arg2, unk_D_86002F58_004_000_004* arg3) {
     GraphNode_AppendChild(&arg0->unk_000, arg3);
     MtxF_Identity(&arg0->unk_060);
     arg0->unk_018 = arg1;
@@ -63,12 +63,12 @@ void Model_InitDisplayObject(unk_D_86002F58_004_000* arg0, s16 arg1, s16 arg2, u
     }
 }
 
-void ModelRenderer_ClearDisplayObject(unk_D_86002F58_004_000* arg0) {
+void ModelRenderer_ClearDisplayObject(DisplayObject* arg0) {
     arg0->unk_000.unk_0C = NULL;
     arg0->unk_000.unk_01 &= ~1;
 }
 
-s32 ModelAnim_SetAnimation(unk_D_86002F58_004_000* arg0, s32 arg1) {
+s32 ModelAnim_SetAnimation(DisplayObject* arg0, s32 arg1) {
     unk_D_86002F58_004_000_00C* tmp = arg0->unk_000.unk_0C;
     unk_D_86002F58_004_000_00C_028* temp_v0 = tmp->unk_28(0, 0);
 
@@ -82,7 +82,7 @@ s32 ModelAnim_SetAnimation(unk_D_86002F58_004_000* arg0, s32 arg1) {
     return 0;
 }
 
-s32 ModelAnim_SetEventTrack(unk_D_86002F58_004_000* arg0, s32 arg1) {
+s32 ModelAnim_SetEventTrack(DisplayObject* arg0, s32 arg1) {
     unk_D_86002F58_004_000_00C* temp_v0 = arg0->unk_000.unk_0C;
     unk_D_86002F58_004_000_00C_028* temp_v1 = temp_v0->unk_28(0, 0);
 
@@ -96,19 +96,19 @@ s32 ModelAnim_SetEventTrack(unk_D_86002F58_004_000* arg0, s32 arg1) {
     return 0;
 }
 
-void Model_SetMaterialColor(unk_D_86002F58_004_000* arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
+void Model_SetMaterialColor(DisplayObject* arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4) {
     Color_SetRGBA(&arg0->unk_0A0, arg1, arg2, arg3, arg4);
 }
 
-void Model_SetMaterialAlpha(unk_D_86002F58_004_000* arg0, u8 arg1) {
+void Model_SetMaterialAlpha(DisplayObject* arg0, u8 arg1) {
     arg0->unk_01D = arg1;
 }
 
-void Model_SetMaterialTextureMode(unk_D_86002F58_004_000* arg0, u8 arg1) {
+void Model_SetMaterialTextureMode(DisplayObject* arg0, u8 arg1) {
     arg0->unk_01C = arg1;
 }
 
-unk_D_86002F58_004_000_00C_028* ModelAnim_GetAnimationRecord(unk_D_86002F58_004_000* arg0, s32 arg1) {
+unk_D_86002F58_004_000_00C_028* ModelAnim_GetAnimationRecord(DisplayObject* arg0, s32 arg1) {
     unk_D_86002F58_004_000_00C_028* var_v1 = NULL;
 
     if (arg0 == NULL) {

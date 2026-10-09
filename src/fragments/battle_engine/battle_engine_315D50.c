@@ -78,9 +78,9 @@ s32 pad_D_843903A8[2];
 static s32 D_843903B0;
 static s32 D_843903B4;
 s32 pad_D_843903B8[6];
-static unk_D_86002F58_004_000 D_843903D0[16];
+static DisplayObject D_843903D0[16];
 static s32 D_84391A50[16];
-static unk_D_86002F58_004_000 D_84391A90[4];
+static DisplayObject D_84391A90[4];
 static s32 D_84392030[4];
 static unk_D_84392040 D_84392040;
 f32 D_84392058[26];
@@ -4924,14 +4924,14 @@ void BattleAnim_ResetDisplayContexts(void) {
     }
 }
 
-Particle* BattleAnim_GetOwnerContextParticle(unk_D_86002F58_004_000* arg0) {
+Particle* BattleAnim_GetOwnerContextParticle(DisplayObject* arg0) {
     return arg0->unk_000.unk_14;
 }
 
-unk_D_86002F58_004_000* BattleAnim_AllocOwnerDisplayContext(Particle* arg0) {
+DisplayObject* BattleAnim_AllocOwnerDisplayContext(Particle* arg0) {
     s32 i;
     s32 var_v0 = -1;
-    unk_D_86002F58_004_000* temp_a0;
+    DisplayObject* temp_a0;
 
     for (i = 0; i < 16; i++) {
         if (D_84391A50[i] == 0) {
@@ -4950,7 +4950,7 @@ unk_D_86002F58_004_000* BattleAnim_AllocOwnerDisplayContext(Particle* arg0) {
     return temp_a0;
 }
 
-void BattleAnim_FreeOwnerDisplayContext(unk_D_86002F58_004_000* arg0) {
+void BattleAnim_FreeOwnerDisplayContext(DisplayObject* arg0) {
     s32 i;
 
     for (i = 0; i < 16; i++) {
@@ -4965,10 +4965,10 @@ void BattleAnim_FreeOwnerDisplayContext(unk_D_86002F58_004_000* arg0) {
     }
 }
 
-unk_D_86002F58_004_000* BattleAnim_AllocParticleDisplayContext(Particle* arg0) {
+DisplayObject* BattleAnim_AllocParticleDisplayContext(Particle* arg0) {
     s32 i;
     s32 var_a2 = -1;
-    unk_D_86002F58_004_000* sp1C;
+    DisplayObject* sp1C;
 
     for (i = 0; i < 4; i++) {
         if (D_84392030[i] == 0) {
@@ -4988,7 +4988,7 @@ unk_D_86002F58_004_000* BattleAnim_AllocParticleDisplayContext(Particle* arg0) {
     return sp1C;
 }
 
-void BattleAnim_FreeParticleDisplayContext(unk_D_86002F58_004_000* arg0) {
+void BattleAnim_FreeParticleDisplayContext(DisplayObject* arg0) {
     s32 i;
 
     for (i = 0; i < 4; i++) {
@@ -5003,29 +5003,29 @@ void BattleAnim_FreeParticleDisplayContext(unk_D_86002F58_004_000* arg0) {
     }
 }
 
-void BattleAnim_InitModelWithAnim(unk_D_86002F58_004_000* arg0, s16 arg1, s16 arg2) {
+void BattleAnim_InitModelWithAnim(DisplayObject* arg0, s16 arg1, s16 arg2) {
     Model_InitDisplayObject(arg0, 0, 0, gBattleAnimAssetPointers[arg1]);
     ModelAnim_BindTransformCurve(arg0, 0, gBattleAnimAssetPointers[arg2], 0x10000);
 }
 
-void BattleAnim_SetModelAnimFrame(unk_D_86002F58_004_000* arg0, s16 arg1) {
+void BattleAnim_SetModelAnimFrame(DisplayObject* arg0, s16 arg1) {
     ModelAnim_SetFrame(arg0, arg1);
 }
 
-void BattleAnim_InitModel(unk_D_86002F58_004_000* arg0, s16 arg1) {
+void BattleAnim_InitModel(DisplayObject* arg0, s16 arg1) {
     Model_InitDisplayObject(arg0, 0, 0, gBattleAnimAssetPointers[arg1]);
 }
 
-void BattleAnim_BindModelAnim(unk_D_86002F58_004_000* arg0, s16 arg1) {
+void BattleAnim_BindModelAnim(DisplayObject* arg0, s16 arg1) {
     ModelAnim_BindTransformCurve(arg0, 0, gBattleAnimAssetPointers[arg1], 0x10000);
 }
 
-void BattleAnim_BindModelAnimReversed(unk_D_86002F58_004_000* arg0, s16 arg1) {
+void BattleAnim_BindModelAnimReversed(DisplayObject* arg0, s16 arg1) {
     ModelAnim_BindTransformCurve(arg0, 0, gBattleAnimAssetPointers[arg1], -0x10000);
     ModelAnim_SetFrame(arg0, arg0->unk_040.unk_04->unk_0A - 1);
 }
 
-s32 BattleAnim_IsModelAnimComplete(unk_D_86002F58_004_000* arg0) {
+s32 BattleAnim_IsModelAnimComplete(DisplayObject* arg0) {
     s32 ret = 0;
 
     if (arg0->unk_040.unk_08 == 0) {

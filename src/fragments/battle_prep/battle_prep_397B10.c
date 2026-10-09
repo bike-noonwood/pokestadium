@@ -1050,7 +1050,7 @@ void BattlePrep_InitCarouselCupIcon(unk_D_84B259A8* arg0, s16 arg1) {
     }
 }
 
-void BattlePrep_InitCarouselEntry(unk_D_84B259A8* arg0, unk_D_86002F58_004_000* arg1) {
+void BattlePrep_InitCarouselEntry(unk_D_84B259A8* arg0, DisplayObject* arg1) {
     s32 i;
 
     arg0->unk_20 = arg1;
@@ -1076,7 +1076,7 @@ void BattlePrep_StartCarouselExit(unk_D_84B259A8* arg0) {
     arg0->unk_00 = 3;
 }
 
-void BattlePrep_InitCarouselExit(unk_D_84B259A8* arg0, unk_D_86002F58_004_000* arg1) {
+void BattlePrep_InitCarouselExit(unk_D_84B259A8* arg0, DisplayObject* arg1) {
     s32 i;
 
     arg0->unk_20 = arg1;
@@ -1501,7 +1501,7 @@ void BattlePrep_UpdateBadgeCarousel(unk_D_84B259E8* arg0) {
     }
 }
 
-void BattlePrep_InitBadgeCarousel(unk_D_84B259E8* arg0, unk_D_86002F58_004_000* arg1, s16 arg2) {
+void BattlePrep_InitBadgeCarousel(unk_D_84B259E8* arg0, DisplayObject* arg1, s16 arg2) {
     s32 i;
     s16 var_s2;
 

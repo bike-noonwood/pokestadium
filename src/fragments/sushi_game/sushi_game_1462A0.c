@@ -98,7 +98,7 @@ static unk_D_86002F34_00C* D_86808490;
 unk_D_86808498 D_86808498;
 
 void SushiGame_UpdateNameTagPulse(unk_D_86807558* arg0) {
-    unk_D_86002F58_004_000* ptr = &arg0->unk_24C;
+    DisplayObject* ptr = &arg0->unk_24C;
 
     if (arg0->unk_0DC != 0) {
         ptr->unk_030.x = (SINS(arg0->unk_0E2 + 0x0000) * 0.3f) + 1.0f;
@@ -191,7 +191,7 @@ s32 SushiGame_OrthonormalizeBasis(unk_D_86807558_098* arg0) {
     return 0;
 }
 
-s16 SushiGame_FindCrossedAnimEvent(unk_D_86002F58_004_000* arg0, s16 arg1) {
+s16 SushiGame_FindCrossedAnimEvent(DisplayObject* arg0, s16 arg1) {
     s32 i;
     s16 sp2A;
 
@@ -243,7 +243,7 @@ void SushiGame_ResetPlayerSubState(unk_D_86807558_040* arg0) {
 
 void SushiGame_InitPlayerSlot(unk_D_86807558* arg0, s32 arg1, s32 arg2) {
     s32 i;
-    unk_D_86002F58_004_000* sp24;
+    DisplayObject* sp24;
     s16 angle;
     f32 sqrt;
 
@@ -1411,7 +1411,7 @@ void SushiGame_ApplyCollisionPush(unk_D_86807558* arg0) {
 void SushiGame_UpdatePlayerModelTransform(unk_D_86807558* arg0) {
     UNUSED s32 pad[3];
     f32 var_fv0;
-    unk_D_86002F58_004_000* ptr = &arg0->unk_0E4;
+    DisplayObject* ptr = &arg0->unk_0E4;
 
     ptr->unk_024 = arg0->unk_068;
 

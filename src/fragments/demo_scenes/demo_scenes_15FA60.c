@@ -88,7 +88,7 @@ s32 Diorama_LogoRotateColorCallback(s32 arg0, GraphNode* arg1) {
 
 s32 Diorama_ScaleRotateCallbackA(s32 arg0, GraphNode* arg1) {
     if (arg0 == 2) {
-        unk_D_86002F58_004_000* ptr = (unk_D_86002F58_004_000*)arg1;
+        DisplayObject* ptr = (DisplayObject*)arg1;
 
         ptr->unk_030.x = 1.5f;
         ptr->unk_030.y = 1.5f;
@@ -101,7 +101,7 @@ s32 Diorama_ScaleRotateCallbackA(s32 arg0, GraphNode* arg1) {
 
 s32 Diorama_ScaleRotateCallbackB(s32 arg0, GraphNode* arg1) {
     if (arg0 == 2) {
-        unk_D_86002F58_004_000* ptr = (unk_D_86002F58_004_000*)arg1;
+        DisplayObject* ptr = (DisplayObject*)arg1;
 
         ptr->unk_030.x = 1.0f;
         ptr->unk_030.y = 1.0f;

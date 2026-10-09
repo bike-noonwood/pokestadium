@@ -27,7 +27,7 @@ typedef struct unk_D_8423E518 {
 } unk_D_8423E518; // size = 0x14
 
 GraphNode* D_8423D400;
-unk_D_86002F58_004_000 D_8423D408[2][6];
+DisplayObject D_8423D408[2][6];
 unk_D_86002F58_004_000_004* D_8423E4E8[6];
 unk_D_86002F58_004_000_004* D_8423E500;
 u8* D_8423E508[4];
@@ -761,7 +761,7 @@ void TeamSelection_TrainerSlots_PollGameBoySaves(void) {
 s32 TeamSelection_TrainerSlots_Initialize(s16 arg0) {
     s32 i;
     MemoryBlock* temp_v0 = MainPool_AllocState(main_pool_get_available(), 0);
-    unk_D_86002F58_004_000* var_s2;
+    DisplayObject* var_s2;
 
     D_8423D400 = process_geo_layout(temp_v0, D_84210DF4);
     D_8423E56A = arg0;

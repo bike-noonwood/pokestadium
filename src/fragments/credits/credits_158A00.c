@@ -110,7 +110,7 @@ u32 D_86A025D0[] = {
 };
 
 s32 Credits_BackgroundNodePostCallback(s32 arg0, GraphNode* arg1) {
-    unk_D_86002F58_004_000* ptr = (unk_D_86002F58_004_000*)arg1;
+    DisplayObject* ptr = (DisplayObject*)arg1;
 
     if (arg0 == 2) {
         ptr->unk_03C.rgba = D_86A061E0.rgba;

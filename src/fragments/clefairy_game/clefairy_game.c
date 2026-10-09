@@ -24,7 +24,7 @@ typedef struct unk_D_861054C0 {
     /* 0x000 */ s16 unk_000;
     /* 0x002 */ s16 unk_002;
     /* 0x004 */ char pad4[4];
-    /* 0x008 */ unk_D_86002F58_004_000 unk_008;
+    /* 0x008 */ DisplayObject unk_008;
     /* 0x170 */ s16 unk_170;
     /* 0x172 */ u16 unk_172;
     /* 0x174 */ s16 unk_174[0xC];
@@ -45,13 +45,13 @@ typedef struct unk_D_861054C0 {
 
 typedef struct unk_D_86105EA0 {
     /* 0x000 */ char unk000[0x4];
-    /* 0x004 */ unk_D_86002F58_004_000 unk_004;
+    /* 0x004 */ DisplayObject unk_004;
 } unk_D_86105EA0; // size = 0x16C
 
 typedef struct unk_D_86106450 {
     /* 0x000 */ s16 unk_000;
     /* 0x002 */ s16 unk_002;
-    /* 0x004 */ unk_D_86002F58_004_000 unk_004;
+    /* 0x004 */ DisplayObject unk_004;
     /* 0x16C */ unk_D_86002F58_004_000_004* unk_16C;
 } unk_D_86106450; // size = 0x170
 
@@ -318,11 +318,11 @@ static s32 D_861054BC;
 static unk_D_861054C0 D_861054C0[4];
 static s32 D_86105BC0;
 static unk_D_861054C0* D_86105BC4;
-static unk_D_86002F58_004_000* D_86105BC8;
+static DisplayObject* D_86105BC8;
 static s16 D_86105BCC;
 static s16 D_86105BCE;
-static unk_D_86002F58_004_000 D_86105BD0;
-static unk_D_86002F58_004_000 D_86105D38;
+static DisplayObject D_86105BD0;
+static DisplayObject D_86105D38;
 static unk_D_86105EA0 D_86105EA0[4];
 static unk_D_86106450 D_86106450[12];
 static s16 D_86107590;
@@ -916,7 +916,7 @@ void ClefairyGame_BeginPatternDemo(void) {
 
 void ClefairyGame_BeginDemoPlayerAnims(void) {
     s32 i;
-    unk_D_86002F58_004_000* temp_s0;
+    DisplayObject* temp_s0;
 
     D_86105498 = 4;
     D_8610549C = 0;
@@ -956,7 +956,7 @@ s32 ClefairyGame_WaitDemoIntro(void) {
 
 s32 ClefairyGame_UpdateDemoPlayerAnims(void) {
     s32 i;
-    unk_D_86002F58_004_000* temp_s0;
+    DisplayObject* temp_s0;
 
     for (i = 0; i < 4; i++) {
         temp_s0 = &D_861054C0[i].unk_008;
@@ -1429,7 +1429,7 @@ void ClefairyGame_BeginRoundScoring(void) {
 
 s32 ClefairyGame_UpdateRoundScoring(void) {
     s32 var_v1 = 0;
-    unk_D_86002F58_004_000* temp_s0;
+    DisplayObject* temp_s0;
     s32 i;
 
     for (i = 0; i < 4; i++) {
