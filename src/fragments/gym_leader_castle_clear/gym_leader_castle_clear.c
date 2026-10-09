@@ -225,7 +225,7 @@ void Glc_UpdateColorKeyframe(unk_D_83101F00* arg0) {
                 }
             }
 
-            Vec3f_SetComponentsDuplicate(&arg0->unk_000.unk_030, scale, scale, scale);
+            Vec3f_SetComponentsDuplicate(&arg0->unk_000.scale, scale, scale, scale);
             break;
 
         case 0:
