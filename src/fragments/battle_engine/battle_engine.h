@@ -62,7 +62,7 @@ typedef struct BattlerState {
 } BattlerState; // size = 0xCC
 
 typedef struct PresentationLayout {
-    /* 0x00 */ unk_D_86002F58_004_000_000 unk_00;
+    /* 0x00 */ DisplayNodeHeader unk_00;
     /* 0x18 */ char unk18[0x4];
     /* 0x1C */ s16 unk_1C;
     /* 0x1E */ s16 unk_1E;
@@ -1240,7 +1240,7 @@ void BattleScene_ComputeParticipantModelOffset(Battler* arg0, Vec3f* arg1);
 void BattleScene_GetParticipantAuxiliaryModelPosition(Battler* arg0, Vec3f* arg1);
 f32 BattleAnim_GetOwnerModelHeight(Battler* arg0);
 f32 BattleScene_GetParticipantModelRadiusScaled(Battler* arg0);
-unk_D_86002F58_004_000_004* Battle_GetMoveEffectListEntry(Battler* arg0, s32 arg1);
+ModelNodeView* Battle_GetMoveEffectListEntry(Battler* arg0, s32 arg1);
 s32 Battle_GetTrainerId(Battler* arg0, UNUSED s32 arg1);
 char* Battle_GetActiveMoveName(Battler* arg0);
 u8* Battle_GetActiveMonNickname(Battler* arg0);
