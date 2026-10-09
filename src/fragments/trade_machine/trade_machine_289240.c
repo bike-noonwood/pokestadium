@@ -716,7 +716,6 @@ void Trade_DrawPortInfoPanel(s16 arg0, s16 arg1, s16 arg2) {
     Font_EndTexturedTextRendering();
 }
 
-#ifdef NON_MATCHING
 void func_82F04604(unk_D_82F144D0* arg0) {
     static s16 D_82F13C0C[] = { 0x34, 0x148 };
 
@@ -758,7 +757,7 @@ void func_82F04604(unk_D_82F144D0* arg0) {
     }
 
     spF8 = 0;
-    while (spF8 < spF4) {
+    if (spF4 > 0) do {
         s32 sp68 = spEE * spF8;
         unk_D_82F144D0_0CA8* sp64;
 
@@ -771,7 +770,7 @@ void func_82F04604(unk_D_82F144D0* arg0) {
         }
 
         sp64 = &arg0->unk_0CA8[var_s2];
-        Trade_DrawPickScreenFrame((s16)sp68 + arg0->unk_0004, arg0->unk_0006, arg0->unk_0008, arg0->unk_000A);
+        Trade_DrawPickScreenFrame((s16)(spEE * spF8) + arg0->unk_0004, arg0->unk_0006, arg0->unk_0008, arg0->unk_000A);
 
         if ((arg0->unk_0008 == 0x1B8) && (arg0->unk_000A == 0x10C)) {
             unk_func_82F00838_sp30_00C* ptr;
@@ -879,7 +878,7 @@ void func_82F04604(unk_D_82F144D0* arg0) {
         }
         spF8++;
         sp68 += spEE;
-    }
+    } while (spF8 < spF4);
 
     if ((arg0->unk_0008 == 0x1B8) && (arg0->unk_000A == 0x10C)) {
         if (spE4 != 0) {
@@ -896,10 +895,6 @@ void func_82F04604(unk_D_82F144D0* arg0) {
         Trade_DrawPortInfoPanel(D_82F20A04, D_82F13C0C[D_82F20A04], 0x20);
     }
 }
-#else
-static s16 D_82F13C0C[] = { 0x34, 0x148 };
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/trade_machine/trade_machine_289240/func_82F04604.s")
-#endif
 
 void Trade_ResetPickScreens(void) {
     unk_D_82F144D0* ptr;

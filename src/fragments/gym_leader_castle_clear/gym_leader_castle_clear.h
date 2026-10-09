@@ -33,7 +33,7 @@ void Glc_InitBackgroundFade(void);
 void Glc_UpdateBackgroundFade(void);
 void Glc_DrawFadedBackground(u8* texture, s16 alpha);
 void Glc_DrawBackground(void);
-void Glc_StartBackgroundFade(s16 arg0);
+void Glc_StartBackgroundFade(s16 mode);
 void Glc_ReadInputs(void);
 void Glc_InitObjectAnimation(unk_D_83101F00* arg0, s16 arg1);
 void Glc_DrawScisRectangle(s16 x1, s16 y1, s16 width, s16 height, s16 texture_start_x, s16 texture_start_y, s16 texture_spread_x, s16 texture_spread_y);
