@@ -6,7 +6,7 @@
 #include "src/audio_data.h"
 
 static s32 D_80078A30 = 0;
-static s32 D_80078A34 = 0;
+static s32 scroll_sfx = 0;
 static s32 back_sfx = 0;
 static s32 confirm_sfx = 0;
 static s32 D_80078A40 = 0;
@@ -15,24 +15,24 @@ static s32 D_80078A48 = 0;
 static s32 D_80078A4C = 0;
 static u8 D_80078A50 = 0;
 
-s32 Audio_PlaySoundEffectById(u32 arg0) {
+s32 Audio_PlaySoundEffectById(u32 sfx) {
     u32 temp_v0_3;
     s32 sp28;
     f32 sp24;
 
-    temp_v0_3 = arg0 & 0xFFFF0000;
+    temp_v0_3 = sfx & 0xFFFF0000;
     sp28 = 0x80;
     sp24 = 0.0f;
 
     if (temp_v0_3 == 0x01200000) {
-        return Audio_PlayCategory12SoundCommand(arg0, 0, 0);
+        return Audio_PlayCategory12SoundCommand(sfx, 0, 0);
     }
 
     if (temp_v0_3 == 0x01100000) {
-        return Audio_PlayCategory11SoundCommand(arg0, 0, 0);
+        return Audio_PlayCategory11SoundCommand(sfx, 0, 0);
     }
 
-    if (arg0 == 0xF) {
+    if (sfx == 0xF) {
         if (!(D_800FC820 & 0x80000000)) {
             return 0;
         }
@@ -41,11 +41,11 @@ s32 Audio_PlaySoundEffectById(u32 arg0) {
         return D_80078A30;
     }
 
-    if (arg0 == 0x30) {
-        arg0 = 0x26;
+    if (sfx == 0x30) {
+        sfx = 0x26;
     }
 
-    if (arg0 == 0x3C) {
+    if (sfx == 0x3C) {
         if (D_80078A50 != 0) {
             D_80078A50++;
             if (D_80078A50 > 0) {
@@ -55,14 +55,14 @@ s32 Audio_PlaySoundEffectById(u32 arg0) {
         }
         D_80078A50++;
         if (1) {}
-        arg0 = 5;
+        sfx = 5;
         sp24 = -12.0f;
         sp28 = 0x38;
     }
 
-    switch (arg0) {
+    switch (sfx) {
         case 0x1:
-            Audio_QueueFadeSoundCommand(D_80078A34, 1);
+            Audio_QueueFadeSoundCommand(scroll_sfx, 1);
             break;
 
         case 0x5:
@@ -134,7 +134,7 @@ s32 Audio_PlaySoundEffectById(u32 arg0) {
             break;
 
         case 0x31:
-            arg0 -= 1;
+            sfx -= 1;
             break;
 
         case 0xB:
@@ -159,14 +159,14 @@ s32 Audio_PlaySoundEffectById(u32 arg0) {
             return 0;
     }
 
-    D_80078A30 = Audio_PlaySoundEffect(D_800FC68C, D_800FC688, arg0, sp28, 0x80, -1);
+    D_80078A30 = Audio_PlaySoundEffect(D_800FC68C, D_800FC688, sfx, sp28, 0x80, -1);
     if (sp24 != 0.0f) {
         Audio_QueueVoiceDetune(D_80078A30, sp24);
     }
 
-    switch (arg0) {
+    switch (sfx) {
         case 1:
-            D_80078A34 = D_80078A30;
+            scroll_sfx = D_80078A30;
             break;
 
         case 2:

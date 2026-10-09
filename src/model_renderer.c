@@ -33,8 +33,8 @@ void ModelRenderer_AttachSecondaryDisplayObject(DisplayObject* arg0) {
     arg0->node.flags &= ~1;
 }
 
-void Model_InitDisplayObject(DisplayObject* display_object, s16 root_id, s16 object_type, ModelNodeView* arg3) {
-    GraphNode_AppendChild(&display_object->node, arg3);
+void Model_InitDisplayObject(DisplayObject* display_object, s16 root_id, s16 object_type, ModelNodeView* child) {
+    GraphNode_AppendChild(&display_object->node, child);
     MtxF_Identity(&display_object->matrix);
     display_object->rootId = root_id;
     display_object->objectType = object_type;
