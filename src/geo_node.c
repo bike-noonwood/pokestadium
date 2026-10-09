@@ -409,9 +409,9 @@ unk_func_80011B94* GeoNode_CreateDisplayList(MainPoolState* arg0, unk_func_80011
     }
 
     if (arg1 != NULL) {
-        arg1->unk_18 = arg3;
+        arg1->gfx = arg3;
         GeoNode_Init(arg1, 0x19);
-        arg1->node.renderLayer = arg2;
+        arg1->display_node_header.renderLayer = arg2;
     }
 
     return arg1;

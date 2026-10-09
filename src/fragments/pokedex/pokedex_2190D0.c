@@ -3386,7 +3386,7 @@ s32 Pokedex_FindPrevMapArea(s32 arg0) {
 void Pokedex_BuildMapMarkerDisplayList(void) {
     Gfx* temp_v0 = Gfx_AllocDisplayList(sizeof(Gfx) * 5);
 
-    D_888269C0.unk_18 = temp_v0;
+    D_888269C0.gfx = temp_v0;
 
     if (D_88826A4C == 1) {
         gSPDisplayList(temp_v0++, D_88825648);
@@ -3412,7 +3412,7 @@ void Pokedex_BuildMapMarkersDisplayList(void) {
     ptr = &temp_s2->unk_60;
 
     temp_v0 = Gfx_AllocDisplayList(sizeof(Gfx) * 36 * 25);
-    D_888269E0.unk_18 = temp_v0;
+    D_888269E0.gfx = temp_v0;
     D_88826CE8 = Gfx_AllocDisplayList(sizeof(Mtx) * 36);
     var_s1 = D_88826CE8;
 
@@ -3491,7 +3491,7 @@ void Pokedex_BuildOverviewMarkersDisplayList(void) {
     Gfx* temp_v0;
 
     temp_v0 = Gfx_AllocDisplayList(sizeof(Gfx) * 170);
-    D_88826A20.unk_18 = temp_v0;
+    D_88826A20.gfx = temp_v0;
 
     if (D_88826A4C == 1) {
         gSPDisplayList(temp_v0++, D_888255B8);
@@ -3698,7 +3698,7 @@ void Pokedex_BuildMapLabelsDisplayList(void) {
     s32 sp2C;
 
     temp_v0 = Gfx_AllocDisplayList(sizeof(Gfx) * 450);
-    D_88826A00.unk_18 = temp_v0;
+    D_88826A00.gfx = temp_v0;
 
     gSPDisplayList(temp_v0++, D_88825510);
 

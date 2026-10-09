@@ -525,7 +525,7 @@ void SushiGame_InitConveyorBelt(void) {
         SushiGame_InitConveyorCup(ptr, i);
         temp_a1 = GeoNode_CreateDisplayList(temp_s2, NULL, 4, D_868072C0);
         ptr->unk_018.node.flags |= 1;
-        GraphNode_AppendChild(&ptr->unk_018, &temp_a1->node);
+        GraphNode_AppendChild(&ptr->unk_018, &temp_a1->display_node_header);
     }
 
     for (i = 0, var_s0 = D_868084D8; i < 12; i++, var_s0++) {
