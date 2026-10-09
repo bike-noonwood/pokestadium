@@ -197,23 +197,23 @@ void CupSelect_PollController(void) {
 void func_82E00050(void) {
 }
 
-void CupSelect_DrawSelectionCorners(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5, u8 arg6, u8 arg7) {
-    static s16 D_82E01994 = 0;
+void CupSelect_DrawSelectionCorners(s16 left, s16 bottom, s16 right, s16 top, u8 r, u8 g, u8 b, u8 alpha) {
+    static s16 pulsing_timer = 0;
 
-    s16 sp56 = SINS(D_82E01994) * 2;
+    s16 pulse = SINS(pulsing_timer) * 2;
     UNUSED s32 pad[2];
 
     gSPDisplayList(gDisplayListHead++, D_8006F518);
-    gDPSetEnvColor(gDisplayListHead++, arg4, arg5, arg6, arg7);
+    gDPSetEnvColor(gDisplayListHead++, r, g, b, alpha);
 
-    Gfx_DrawTextureIa8((arg0 + sp56) - 8, (arg1 + sp56) - 8, 0x10, 0x10, D_2000C80, 0x10, 0);
-    Gfx_DrawTextureIa8((arg0 + sp56) - 8, ((arg1 + arg3) - sp56) - 8, 0x10, 0x10, D_2000F80, 0x10, 0);
-    Gfx_DrawTextureIa8(((arg0 + arg2) - sp56) - 8, (arg1 + sp56) - 8, 0x10, 0x10, D_2000D80, 0x10, 0);
-    Gfx_DrawTextureIa8(((arg0 + arg2) - sp56) - 8, ((arg1 + arg3) - sp56) - 8, 0x10, 0x10, D_2000E80, 0x10, 0);
+    Gfx_DrawTextureIa8((left + pulse) - 8, (bottom + pulse) - 8, 0x10, 0x10, bottom_left_sc_tex, 0x10, 0);
+    Gfx_DrawTextureIa8((left + pulse) - 8, ((bottom + top) - pulse) - 8, 0x10, 0x10, top_left_sc_tex, 0x10, 0);
+    Gfx_DrawTextureIa8(((left + right) - pulse) - 8, (bottom + pulse) - 8, 0x10, 0x10, bottom_right_sc_tex, 0x10, 0);
+    Gfx_DrawTextureIa8(((left + right) - pulse) - 8, ((bottom + top) - pulse) - 8, 0x10, 0x10, top_right_sc_tex, 0x10, 0);
 
     gSPDisplayList(gDisplayListHead++, D_8006F630);
 
-    D_82E01994 += 0x2000;
+    pulsing_timer += 0x2000;
 }
 
 s32 CupSelect_IconGeoPostCallback(s32 arg0, unk_func_80011B94* arg1) {
