@@ -27,18 +27,18 @@ typedef struct unk_D_83101E6C {
     /* 0x12 */ s16 unk_12;
 } unk_D_83101E6C; // size = 0x14
 
-typedef struct unk_D_83102218 {
+typedef struct CircleTransition {
     /* 0x00 */ s16 fade_state;
     /* 0x02 */ s16 width;
     /* 0x04 */ s16 circle_height;
     /* 0x08 */ f32 ratio;
-} unk_D_83102218; // size = 0xC
+} CircleTransition; // size = 0xC
 
-typedef struct unk_D_83102224 {
+typedef struct FadeTimer {
     /* 0x00 */ s16 mode;
     /* 0x02 */ s16 timer;
     /* 0x04 */ s16 fade;
-} unk_D_83102224; // size = 0x8
+} FadeTimer; // size = 0x8
 
 static BinArchive* background;
 static u8* bin_background;
@@ -53,8 +53,8 @@ static GraphNode* D_83101EFC;
 static unk_D_83101F00 D_83101F00[2];
 static unk_D_83101F00* D_83102210;
 static unk_D_83101F00* D_83102214;
-static unk_D_83102218 circle_fade;
-static unk_D_83102224 background_fade;
+static CircleTransition circle_fade;
+static FadeTimer background_fade;
 
 static Vtx D_83101BE0[] = {
     VTX(-100, 14, 0, 0, 0, 0x78, 0x32, 0xFF, 0xFF),      VTX(-100, 0, 0, 0, 448, 0xBB, 0x28, 0x8E, 0xFF),
