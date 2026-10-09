@@ -18,18 +18,18 @@
 #define SELECTING_DIVISION 1
 #define SELECTED_DIVISION 2
 
-static BinArchive* D_82E019B0;
+static BinArchive* cup_background_bin;
 static void* cup_background;
 static GraphNode* render_node;
-static GraphNode* D_82E019BC;
-static GraphNode* D_82E019C0;
+static GraphNode* division_render;
+static GraphNode* arrow_render;
 static DisplayObject division_listings[4];
 static DisplayObject arrows[3];
 static ModeSettings D_82E023A0;
 static s16 hovered_division;
-static s16 D_82E023AA;
+static s16 latest_unlocked_division;
 
-static u32 D_82E01110[] = {
+static u32 render_block[] = {
     0x0C000000, 0x05000000, 0x0B00002D,  0x00000000, 0x028001E0, 0x00000000, 0xFDBD0000, 0x00000243,
     0x05000000, 0x0D000000, 0x05000000,  0x14000000, 0x00000000, 0xFFFFFF32, 0x16FFFFFF, 0x0F000002,
     0x05000000, 0x0A000000, &D_800AC840, 0x06000000, 0x06000000, 0x06000000, 0x06000000, 0x01000000,
@@ -165,7 +165,7 @@ static Gfx D_82E01480[] = {
     gsSP2Triangles(0, 1, 2, 0, 0, 2, 3, 0),
     gsSPEndDisplayList(),
 };
-static u32 D_82E01800[] = {
+static u32 division_block[] = {
     0x17000000, 0x00000000, 0x00000000,    0x00000000, D_82E01180, 0x05000000, 0x22050000,
     0x00000000, 0x08000000, CupSelect_IconGeoPostCallback, 0x00000000, 0x06000000, 0x01000000, 0x00000000,
 };
@@ -188,7 +188,7 @@ static Gfx D_82E018B8[] = {
     gsSP2Triangles(4, 5, 6, 0, 4, 6, 7, 0),
     gsSPEndDisplayList(),
 };
-static u32 D_82E01960[] = {
+static u32 arrow_block[] = {
     0x17000000, 0x00000000, 0x00000000,    0x00000000, D_82E01838, 0x05000000, 0x22050000,
     0x00000000, 0x08000000, CupSelect_DividerGeoPostCallback, 0x00000000, 0x06000000, 0x01000000,
 };
@@ -227,7 +227,7 @@ s32 CupSelect_IconGeoPostCallback(s32 arg0, UNUSED unk_func_80011B94* arg1) {
 
     if (arg0 == 5) {
         temp_a3 = D_8006F09C->node.callbackArg;
-        if (D_82E023AA >= temp_a3) {
+        if (latest_unlocked_division >= temp_a3) {
             var_t0 = 0xFF;
         } else {
             var_t0 = 0x80;
@@ -249,7 +249,7 @@ s32 CupSelect_DividerGeoPostCallback(s32 arg0, UNUSED unk_func_80011B94* arg1) {
     if (arg0 == 5) {
         s32 tmp = D_8006F09C->node.callbackArg;
 
-        if (tmp < D_82E023AA) {
+        if (tmp < latest_unlocked_division) {
             var_a3 = 0xFF;
         } else {
             var_a3 = 0x80;
@@ -342,7 +342,7 @@ void CupSelect_BuildDivisionList(void) {
     DisplayObject* arrow;
 
     for (division_listing = &division_listings[0], i = 0; i < 4; i++, division_listing++) {
-        Model_InitDisplayObject(division_listing, 0, 0, D_82E019BC);
+        Model_InitDisplayObject(division_listing, 0, 0, division_render);
         division_listings[i].rotation.y = -0x5000;
     }
 
@@ -352,7 +352,7 @@ void CupSelect_BuildDivisionList(void) {
     Vec3f_SetComponentsDuplicate(&division_listings[3].position, 0.0f, -162.0f, -579.0f);
 
     for (arrow = &arrows[0], i = 0; i < 3; i++, arrow++) {
-        Model_InitDisplayObject(arrow, 0, 0, D_82E019C0);
+        Model_InitDisplayObject(arrow, 0, 0, arrow_render);
         arrows[i].rotation.y = -0x5000;
     }
 
@@ -376,7 +376,7 @@ s32 CupSelect_HandleInput(void) {
             Audio_PlaySoundEffectById(1);
             hovered_division--;
         }
-    } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_DDOWN) && (hovered_division < D_82E023AA)) {
+    } else if (BTN_IS_PRESSED(gPlayer1Controller, BTN_DDOWN) && (hovered_division < latest_unlocked_division)) {
         Audio_PlaySoundEffectById(1);
         hovered_division++;
     }
@@ -389,7 +389,7 @@ s32 CupSelect_Loop(void) {
     s32 selected_division;
 
     CupSelect_BuildDivisionList();
-    hovered_division = D_82E023AA;
+    hovered_division = latest_unlocked_division;
 
     for (i = 0; i < 23; i++) {
         CupSelect_PollController();
@@ -422,69 +422,69 @@ s32 CupSelect_Loop(void) {
 }
 
 void CupSelect_InitGeoLayouts(void) {
-    MemoryBlock* temp_v0 = MainPool_AllocState(main_pool_get_available(), 0);
+    MemoryBlock* memory_block = MainPool_AllocState(main_pool_get_available(), 0);
     s32 i;
-    DisplayObject* var_s2;
+    DisplayObject* cursor;
 
-    render_node = process_geo_layout(temp_v0, &D_82E01110);
-    D_82E019BC = process_geo_layout(temp_v0, &D_82E01800);
-    D_82E019C0 = process_geo_layout(temp_v0, &D_82E01960);
-    MainPool_FinalizeAllocation(temp_v0);
+    render_node = process_geo_layout(memory_block, &render_block);
+    division_render = process_geo_layout(memory_block, &division_block);
+    arrow_render = process_geo_layout(memory_block, &arrow_block);
+    MainPool_FinalizeAllocation(memory_block);
     ModelRenderer_InitDisplayRoots();
 
-    for (var_s2 = &division_listings[0], i = 0; i < 4; var_s2++, i++) {
-        ModelRenderer_AttachDisplayObject(var_s2);
+    for (cursor = &division_listings[0], i = 0; i < 4; cursor++, i++) {
+        ModelRenderer_AttachDisplayObject(cursor);
         division_listings[i].node.callbackArg = i;
     }
 
-    for (var_s2 = &arrows[0], i = 0; i < 3; var_s2++, i++) {
-        ModelRenderer_AttachDisplayObject(var_s2);
+    for (cursor = &arrows[0], i = 0; i < 3; cursor++, i++) {
+        ModelRenderer_AttachDisplayObject(cursor);
         arrows[i].node.callbackArg = i;
     }
 }
 
 s32 CupSelect_Main(UNUSED s32 arg0, UNUSED s32 arg1) {
-    s16 var_v1 = -1;
-    s32 sp18 = 1;
+    s16 background_file = -1;
+    s32 did_select = 1;
 
     switch (D_800AE540.unk_0000) {
         case 3:
-            var_v1 = 9;
+            background_file = 9;
             break;
 
         case 6:
-            var_v1 = 0xC;
+            background_file = 0xC;
             break;
     }
 
-    if (var_v1 != -1) {
+    if (background_file != -1) {
         main_pool_push_state('LVSL');
 
         Font_Init(0x10, 0);
         Save_EnsureBankLoaded(2);
         Save_GetModeSettings(&D_82E023A0, D_800AE540.unk_11F2);
         if (D_800AE540.unk_0000 == 3) {
-            D_82E023AA = D_82E023A0.unk_05;
+            latest_unlocked_division = D_82E023A0.unk_05;
         } else {
-            D_82E023AA = D_82E023A0.unk_06;
+            latest_unlocked_division = D_82E023A0.unk_06;
         }
-        if (D_82E023AA == 4) {
-            D_82E023AA -= 1;
+        if (latest_unlocked_division == 4) {
+            latest_unlocked_division -= 1;
         }
 
         ASSET_LOAD(D_1000000, common_menu1_ui, 0);
         ASSET_LOAD(D_2000000, common_menu2_ui, 0);
         ASSET_LOAD(D_3000000, cup_ball_select_ui, 0);
 
-        D_82E019B0 = ASSET_LOAD2(backgrounds, 1, 1);
-        cup_background = BinArchive_GetFile(D_82E019B0, var_v1);
+        cup_background_bin = ASSET_LOAD2(backgrounds, 1, 1);
+        cup_background = BinArchive_GetFile(cup_background_bin, background_file);
 
         CupSelect_InitGeoLayouts();
         StageLoader_UpdateSegments();
-        sp18 = CupSelect_Loop();
+        did_select = CupSelect_Loop();
         StageLoader_WaitForRetrace();
 
         main_pool_pop_state('LVSL');
     }
-    return sp18;
+    return did_select;
 }
