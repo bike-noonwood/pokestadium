@@ -33,33 +33,33 @@ void ModelRenderer_AttachSecondaryDisplayObject(DisplayObject* arg0) {
     arg0->node.flags &= ~1;
 }
 
-void Model_InitDisplayObject(DisplayObject* arg0, s16 arg1, s16 arg2, ModelNodeView* arg3) {
-    GraphNode_AppendChild(&arg0->node, arg3);
-    MtxF_Identity(&arg0->matrix);
-    arg0->rootId = arg1;
-    arg0->objectType = arg2;
+void Model_InitDisplayObject(DisplayObject* display_object, s16 root_id, s16 object_type, ModelNodeView* arg3) {
+    GraphNode_AppendChild(&display_object->node, arg3);
+    MtxF_Identity(&display_object->matrix);
+    display_object->rootId = root_id;
+    display_object->objectType = object_type;
 
-    arg0->lodFraction = 0xFF;
-    arg0->textureMode = 0;
+    display_object->lodFraction = 0xFF;
+    display_object->textureMode = 0;
 
-    arg0->node.flags |= 0x1;
+    display_object->node.flags |= 0x1;
 
-    arg0->node.renderFlags &= ~0x4;
-    arg0->node.renderFlags |= 0x20;
-    arg0->node.renderFlags |= 0x40;
-    arg0->node.renderFlags &= ~0x2;
+    display_object->node.renderFlags &= ~0x4;
+    display_object->node.renderFlags |= 0x20;
+    display_object->node.renderFlags |= 0x40;
+    display_object->node.renderFlags &= ~0x2;
 
-    arg0->fogColor.rgba = 0xFFFFFF00;
-    arg0->textureTint.rgba = 0xFFFFFF00;
-    arg0->transformAnim.animationId = -1;
-    arg0->transformAnim.data = NULL;
-    arg0->eventTrack.trackId = -1;
-    arg0->eventTrack.data = NULL;
+    display_object->fogColor.rgba = 0xFFFFFF00;
+    display_object->textureTint.rgba = 0xFFFFFF00;
+    display_object->transformAnim.animationId = -1;
+    display_object->transformAnim.data = NULL;
+    display_object->eventTrack.trackId = -1;
+    display_object->eventTrack.data = NULL;
 
-    arg0->node.renderFlags &= ~0x8;
+    display_object->node.renderFlags &= ~0x8;
 
-    if (arg2 > 0) {
-        ModelAnim_StartDisplayObjectAnimation(arg0);
+    if (object_type > 0) {
+        ModelAnim_StartDisplayObjectAnimation(display_object);
     }
 }
 

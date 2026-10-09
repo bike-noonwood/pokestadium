@@ -30,7 +30,7 @@ typedef struct unk_func_80007444 {
     /* 0x11 */ u8 fade_mode;
     /* 0x12 */ u8 unk_12;
     /* 0x13 */ u8 unk_13;
-    /* 0x14 */ u16 unk_14;
+    /* 0x14 */ u16 clear_color;
     /* 0x16 */ s8 unk_16;
     /* 0x17 */ u8 pad17;
     /* 0x18 */ unk_D_80068BB0* unk_18[3];

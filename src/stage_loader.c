@@ -191,9 +191,9 @@ void StageFade_Update(void) {
         return;
     }
 
-    r = RGBA16_GET_R(stage->unk_14);
-    g = RGBA16_GET_G(stage->unk_14);
-    b = RGBA16_GET_B(stage->unk_14);
+    r = RGBA16_GET_R(stage->clear_color);
+    g = RGBA16_GET_G(stage->clear_color);
+    b = RGBA16_GET_B(stage->clear_color);
 
     r = (r << 3) | (r >> 2);
     g = (g << 3) | (g >> 2);
@@ -386,7 +386,7 @@ void StageLoader_FillFrame(void) {
     gDPPipeSync(gDisplayListHead++);
     gDPSetRenderMode(gDisplayListHead++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
     gDPSetCycleType(gDisplayListHead++, G_CYC_FILL);
-    gDPSetFillColor(gDisplayListHead++, (stage->unk_14 << 0x10) | stage->unk_14);
+    gDPSetFillColor(gDisplayListHead++, (stage->clear_color << 0x10) | stage->clear_color);
     gDPFillRectangle(gDisplayListHead++, stage->unk_04, stage->unk_08, stage->unk_06,
                      stage->unk_0A);
     gDPPipeSync(gDisplayListHead++);
@@ -409,7 +409,7 @@ unk_func_80007444* StageContext_Allocate(s8 zoom, s8 arg1, s8 arg2, s8 arg3, s8 
         temp_v0->unk_0E = arg2;
         temp_v0->unk_0F = arg3;
         temp_v0->unk_10 = arg4;
-        temp_v0->unk_14 = Display_GetFramebufferClearColor();
+        temp_v0->clear_color = Display_GetFramebufferClearColor();
         temp_v0->unk_16 = 0;
         temp_v0->unk_04 = 0;
         temp_v0->unk_06 = temp_v0->unk_00 - 1;
@@ -454,7 +454,7 @@ void StageContext_SaveAndSwitch(unk_func_80007444* arg0) {
     arg0->fade_mode = stage->fade_mode;
     arg0->unk_12 = stage->unk_12;
     arg0->unk_13 = stage->unk_13;
-    arg0->unk_14 = stage->unk_14;
+    arg0->clear_color = stage->clear_color;
 
     if (stage->unk_16 < arg0->unk_0E) {
         arg0->unk_16 = stage->unk_16;
@@ -469,7 +469,7 @@ void StageContext_Activate(unk_func_80007444* arg0) {
     stage = arg0;
     Display_QueueFramebufferRequest(NULL);
     Display_WaitForCompletion();
-    Display_ClearFramebufferLine(arg0->unk_14);
+    Display_ClearFramebufferLine(arg0->clear_color);
     StageLoader_SwapDisplayListAndReset();
 }
 
@@ -554,10 +554,10 @@ s32 BgStage_WaitForCondition(s32 (*arg0)(u8), s32 arg1, s32 arg2) {
     return var_s2;
 }
 
-void StageContext_SetClearColor(u16 arg0) {
+void StageContext_SetClearColor(u16 color) {
     if (stage != NULL) {
-        stage->unk_14 = arg0;
-        Display_ClearFramebufferLine(arg0);
+        stage->clear_color = color;
+        Display_ClearFramebufferLine(color);
     }
 }
 

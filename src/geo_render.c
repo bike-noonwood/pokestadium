@@ -994,10 +994,10 @@ void Geo_NodeShadow(GraphNode* arg0) {
     }
 }
 
-void Geo_RenderRootNode(GraphNode* arg0) {
-    unk_D_86002F34_alt1* arg = (unk_D_86002F34_alt1*)arg0;
+void Geo_RenderRootNode(GraphNode* node) {
+    unk_D_86002F34_alt1* arg = (unk_D_86002F34_alt1*)node;
 
-    if (arg0->unk_01 & 1) {
+    if (node->unk_01 & 1) {
         gDPPipeSync(gDisplayListHead++);
 
         gDPSetTextureLOD(gDisplayListHead++, G_TL_TILE);
@@ -1012,7 +1012,7 @@ void Geo_RenderRootNode(GraphNode* arg0) {
         gDPSetAlphaDither(gDisplayListHead++, G_AD_PATTERN);
 
         D_8006F08C = arg;
-        Geo_ProcessNodeChildren(arg0);
+        Geo_ProcessNodeChildren(node);
         D_8006F08C = NULL;
     }
 

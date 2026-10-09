@@ -100,7 +100,7 @@ void GeoRender_RecordAnchorPosition(s32 arg0);
 void Geo_NodeAnchor(GraphNode* arg0);
 void Geo_NodeGroup(GraphNode* arg0);
 void Geo_NodeShadow(GraphNode* arg0);
-void Geo_RenderRootNode(GraphNode* arg0);
+void Geo_RenderRootNode(GraphNode* node);
 void Geo_ProcessCallbacks(GraphNode* arg0, s32 arg1);
 void GeoRender_SetMode(s32 arg0);
 void GeoRender_AdvanceFrameCounter(void);

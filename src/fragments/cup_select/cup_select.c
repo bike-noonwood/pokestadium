@@ -216,7 +216,7 @@ void CupSelect_DrawSelectionCorners(s16 left, s16 bottom, s16 right, s16 top, u8
     pulsing_timer += 0x2000;
 }
 
-s32 CupSelect_IconGeoPostCallback(s32 arg0, unk_func_80011B94* arg1) {
+s32 CupSelect_IconGeoPostCallback(s32 arg0, UNUSED unk_func_80011B94* arg1) {
     s32 temp_a3;
     s32 var_t0;
 
@@ -238,7 +238,7 @@ s32 CupSelect_IconGeoPostCallback(s32 arg0, unk_func_80011B94* arg1) {
     return 0;
 }
 
-s32 CupSelect_DividerGeoPostCallback(s32 arg0, unk_func_80011B94* arg1) {
+s32 CupSelect_DividerGeoPostCallback(s32 arg0, UNUSED unk_func_80011B94* arg1) {
     s32 var_a3;
 
     if (arg0 == 5) {
