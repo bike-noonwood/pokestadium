@@ -131,7 +131,7 @@ Particle* Particle_CreateAtTransform(f32 arg0, Vec3f arg1, Vec3s arg2, ParticleU
     return sp1C;
 }
 
-Particle* Particle_CreateFromObjectTransform(unk_D_86002F58_004_000* arg0, ParticleUpdateCallback arg1, ParticleDescriptor* arg2,
+Particle* Particle_CreateFromObjectTransform(DisplayObject* arg0, ParticleUpdateCallback arg1, ParticleDescriptor* arg2,
                               s16 arg3, s16 arg4, s16 arg5) {
     Particle* sp1C = Particle_New();
 
@@ -182,7 +182,7 @@ void Particle_EmitBurstAtTransformWithMetadata(f32 arg0, Vec3f arg1, Vec3s arg2,
     }
 }
 
-void Particle_EmitBurstFromObject(unk_D_86002F58_004_000* arg0, ParticleUpdateCallback arg1, ParticleDescriptor* arg2, s16 arg3,
+void Particle_EmitBurstFromObject(DisplayObject* arg0, ParticleUpdateCallback arg1, ParticleDescriptor* arg2, s16 arg3,
                    s16 arg4) {
     s32 i;
 
@@ -193,7 +193,7 @@ void Particle_EmitBurstFromObject(unk_D_86002F58_004_000* arg0, ParticleUpdateCa
     }
 }
 
-void Particle_EmitBurstFromObjectWithMetadata(unk_D_86002F58_004_000* arg0, ParticleUpdateCallback arg1, ParticleDescriptor* arg2, s16 arg3,
+void Particle_EmitBurstFromObjectWithMetadata(DisplayObject* arg0, ParticleUpdateCallback arg1, ParticleDescriptor* arg2, s16 arg3,
                    s16 arg4, s16 arg5) {
     s32 i;
 

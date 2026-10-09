@@ -183,8 +183,8 @@ void BattlePrepStarBurst_InitSparkSlot(unk_D_84B25AC0_000* arg0, unk_D_86002F34*
 
 void BattlePrepStarBurst_UpdateSparkSlot(unk_D_84B25AC0_000* arg0) {
     s16 temp_v0;
-    unk_D_86002F58_004_000* temp_v1;
-    unk_D_86002F58_004_000* temp_v1_2;
+    DisplayObject* temp_v1;
+    DisplayObject* temp_v1_2;
 
     if (arg0->unk_04 < 0x10) {
         arg0->unk_0C = Memmap_GetSegmentVaddr(((s32*)Memmap_GetSegmentVaddr(D_2023240))[(arg0->unk_04 / 2)]);
@@ -548,7 +548,7 @@ void BattlePrepStarBurst_Update(unk_D_84B25AC0* arg0) {
     }
 }
 
-void BattlePrepStarBurst_Launch(unk_D_84B25AC0* arg0, unk_D_86002F58_004_000* arg1, unk_D_86002F58_004_000* arg2) {
+void BattlePrepStarBurst_Launch(unk_D_84B25AC0* arg0, DisplayObject* arg1, DisplayObject* arg2) {
     s32 i;
     s32 j;
 

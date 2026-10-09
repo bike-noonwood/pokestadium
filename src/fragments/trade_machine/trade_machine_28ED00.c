@@ -223,7 +223,7 @@ void Trade_SetupBoxSlots(s16 arg0) {
 
     var_s0 = &D_82F20A88[0];
     for (i = 0; i < D_82F210D0; i++, var_s0++) {
-        unk_D_86002F58_004_000* ptr = &var_s0->unk_028;
+        DisplayObject* ptr = &var_s0->unk_028;
 
         ModelRenderer_AttachDisplayObject(ptr);
         Model_InitDisplayObject(ptr, 0, 0, D_82F210CC);
@@ -233,7 +233,7 @@ void Trade_SetupBoxSlots(s16 arg0) {
 }
 
 void Trade_SetBoxSlotAnimState(unk_D_82F20A88* arg0, s16 arg1) {
-    unk_D_86002F58_004_000* temp_v0 = &arg0->unk_028;
+    DisplayObject* temp_v0 = &arg0->unk_028;
 
     arg0->unk_000 = arg1;
 
@@ -424,7 +424,7 @@ void Trade_UpdateBoxSlotTransforms(void) {
         }
 
         if (var_s0->unk_000 != 0) {
-            unk_D_86002F58_004_000* ptr = &var_s0->unk_028;
+            DisplayObject* ptr = &var_s0->unk_028;
 
             Vec3f_SetComponentsDuplicate(&ptr->unk_024, var_s0->unk_006 - 320.0f, 240.0f - var_s0->unk_008, -579.0f);
             ptr->unk_01E.z = var_s0->unk_012;

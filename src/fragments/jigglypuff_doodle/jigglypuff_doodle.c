@@ -46,7 +46,7 @@ static u32 D_86301650[] = {
 typedef struct unk_D_86301730 {
     /* 0x000 */ s16 unk_000;
     /* 0x002 */ s16 unk_002;
-    /* 0x004 */ unk_D_86002F58_004_000 unk_004;
+    /* 0x004 */ DisplayObject unk_004;
     /* 0x16C */ Vec3f unk_16C;
     /* 0x178 */ s8 unk_178;
     /* 0x179 */ s8 unk_179;
@@ -68,11 +68,11 @@ static FontContext* D_86301728;
 static unk_D_86301730 D_86301730[4];
 static u32 D_86301D40;
 static unk_D_86301730* D_86301D44;
-static unk_D_86002F58_004_000* D_86301D48;
+static DisplayObject* D_86301D48;
 static s16 D_86301D4C;
 static s16 D_86301D4E;
 static s16 D_86301D50[4];
-static unk_D_86002F58_004_000 D_86301D58;
+static DisplayObject D_86301D58;
 
 void JigglypuffGame_SnapshotInputs(void) {
     s32 i;

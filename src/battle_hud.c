@@ -137,7 +137,7 @@ s16 ModelRenderer_GetObjectType(void) {
     return ret;
 }
 
-void ModelAnim_StartDisplayObjectAnimation(unk_D_86002F58_004_000* arg0) {
+void ModelAnim_StartDisplayObjectAnimation(DisplayObject* arg0) {
     void (*func)(void*);
     s32 unk1A = arg0->unk_01A;
     s32 idx = arg0->unk_0A6;

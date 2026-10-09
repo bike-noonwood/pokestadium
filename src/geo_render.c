@@ -27,7 +27,7 @@ unk_D_86002F34_alt1* D_8006F08C = NULL;
 unk_D_86002F34_alt1* D_8006F090 = NULL;
 unk_D_86002F34_00C* D_8006F094 = NULL;
 unk_D_86002F34_alt1* D_8006F098 = NULL;
-unk_D_86002F58_004_000* D_8006F09C = NULL;
+DisplayObject* D_8006F09C = NULL;
 unk_D_86002F34_alt11* D_8006F0A0 = NULL;
 static func_D_8006F0A4 D_8006F0A4[] = {
     Geo_ProcessNodeChildren, Geo_NodeReference, Geo_NodeCamera, Geo_NodeType3Pass, Geo_NodeModelRoot, Geo_NodeOrtho, Geo_NodePerspective,
@@ -767,7 +767,7 @@ void Geo_NodeDisplayListPart(GraphNode* arg0) {
 void Geo_NodeModelPart(GraphNode* arg0) {
     MtxF sp38;
     Color_RGBA8_u32 sp34;
-    unk_D_86002F58_004_000* arg = (unk_D_86002F58_004_000*)arg0;
+    DisplayObject* arg = (DisplayObject*)arg0;
 
     if (D_8006F090->unk_18 == arg->unk_018) {
         arg->unk_0A7 = 0;
@@ -1083,11 +1083,11 @@ s32 GeoRender_IsModelFrameCurrent(void) {
     return var_v1;
 }
 
-Vec3f* GeoRender_FindAnchorPosition(unk_D_86002F58_004_000* arg0, s16 arg1, Vec3f* arg2) {
+Vec3f* GeoRender_FindAnchorPosition(DisplayObject* arg0, s16 arg1, Vec3f* arg2) {
     s32 i;
     s32 var_v0;
     u8 temp_v1;
-    unk_D_86002F58_004_000* var_a2;
+    DisplayObject* var_a2;
 
     for (i = 0; i < arg0->unk_0A7; i++) {
         if (arg1 == arg0->unk_0A8[i].unk_00) {

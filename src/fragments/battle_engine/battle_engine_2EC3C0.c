@@ -2029,7 +2029,7 @@ void BattleScene_InitializeParticipantSecondaryModels(Battler* arg0, s32* arg1) 
 }
 
 void BattleScene_InitializeParticipantAuxiliaryModel(Battler* arg0) {
-    unk_D_86002F58_004_000* ptr = &arg0->unk_4EC;
+    DisplayObject* ptr = &arg0->unk_4EC;
     unk_D_86002F58_004_000_004* sp20 = arg0->unk_720->unk_18;
 
     ModelRenderer_AttachDisplayObject(ptr);

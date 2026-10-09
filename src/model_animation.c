@@ -331,12 +331,12 @@ void ModelAnim_EvaluateJointTransform(Vec3f* arg0, Vec3s* arg1, Vec3f* arg2, s32
     }
 }
 
-void ModelAnim_ClearTransformChannel(unk_D_86002F58_004_000* arg0) {
+void ModelAnim_ClearTransformChannel(DisplayObject* arg0) {
     arg0->unk_040.unk_00 = -1;
     arg0->unk_040.unk_04 = NULL;
 }
 
-s32 ModelAnim_BindTransformCurve(unk_D_86002F58_004_000* arg0, s16 arg1, void* arg2, s32 arg3) {
+s32 ModelAnim_BindTransformCurve(DisplayObject* arg0, s16 arg1, void* arg2, s32 arg3) {
     unk_D_86002F58_004_000_040_004* temp_v0 = Util_ConvertAddrToVirtAddr(arg2);
     unk_D_86002F58_004_000_040* ptr = &arg0->unk_040;
 
@@ -350,16 +350,16 @@ s32 ModelAnim_BindTransformCurve(unk_D_86002F58_004_000* arg0, s16 arg1, void* a
     return ptr->unk_08 >> 0x10;
 }
 
-s32 ModelAnim_SetSpeed(unk_D_86002F58_004_000* arg0, s32 arg1) {
+s32 ModelAnim_SetSpeed(DisplayObject* arg0, s32 arg1) {
     arg0->unk_040.unk_0C = arg1;
     return arg0->unk_040.unk_08 >> 0x10;
 }
 
-void ModelAnim_SetFrame(unk_D_86002F58_004_000* arg0, s16 arg1) {
+void ModelAnim_SetFrame(DisplayObject* arg0, s16 arg1) {
     arg0->unk_040.unk_08 = (arg1 << 0x10) - arg0->unk_040.unk_0C;
 }
 
-s32 ModelAnim_HasCrossedFrame(unk_D_86002F58_004_000* arg0, s16 arg1) {
+s32 ModelAnim_HasCrossedFrame(DisplayObject* arg0, s16 arg1) {
     unk_D_86002F58_004_000_040* ptr = &arg0->unk_040;
     s32 temp_v0 = ptr->unk_08 + ptr->unk_0C;
     s32 arg = arg1 << 0x10;
@@ -381,10 +381,10 @@ s32 ModelAnim_HasCrossedFrame(unk_D_86002F58_004_000* arg0, s16 arg1) {
     return var_a2;
 }
 
-s32 ModelAnim_IsAnimationDone(unk_D_86002F58_004_000* arg0) {
+s32 ModelAnim_IsAnimationDone(DisplayObject* arg0) {
     return ModelAnim_HasCrossedFrame(arg0, arg0->unk_040.unk_04->unk_0A - 1);
 }
 
-s32 ModelAnim_IsFinished(unk_D_86002F58_004_000* arg0) {
+s32 ModelAnim_IsFinished(DisplayObject* arg0) {
     return arg0->unk_040.unk_08 >= ((arg0->unk_040.unk_04->unk_0A - 1) << 0x10);
 }

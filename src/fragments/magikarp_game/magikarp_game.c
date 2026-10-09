@@ -135,7 +135,7 @@ static s16 D_86002F4C;
 static s32 D_86002F50;
 
 typedef struct unk_D_86002F58_004 {
-    /* 0x000 */ unk_D_86002F58_004_000 unk_000;
+    /* 0x000 */ DisplayObject unk_000;
     /* 0x168 */ s16 unk_168;
     /* 0x16A */ u16 unk_16A;
     /* 0x16C */ s16 unk_16C;
@@ -171,7 +171,7 @@ static s16 D_86003B70[4];
 static s16 D_86003B78;
 static FontContext* D_86003B7C;
 static s32 D_86003B80;
-static unk_D_86002F58_004_000 D_86003B84[4];
+static DisplayObject D_86003B84[4];
 
 void MagikarpGame_UpdateAIInputBias(void) {
     s32 i;

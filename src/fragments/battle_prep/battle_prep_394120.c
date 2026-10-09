@@ -144,7 +144,7 @@ s32 BattlePrep_StarfieldGeoCallback(s32 arg0, unk_D_86002F34_alt8* arg1) {
     }
 }
 
-void BattlePrep_ResetDisplayObject(unk_D_86002F58_004_000* arg0) {
+void BattlePrep_ResetDisplayObject(DisplayObject* arg0) {
     ModelRenderer_ClearDisplayObject(arg0);
     Vec3f_SetComponentsDuplicate(&arg0->unk_024, 0.0f, 0.0f, 0.0f);
     Vec3f_SetComponentsDuplicate(&arg0->unk_030, 1.0f, 1.0f, 1.0f);
@@ -1180,7 +1180,7 @@ s32 BattlePrep_ShowCastleClearOutro(void) {
 void BattlePrep_InitScene(void) {
     MemoryBlock* temp_v0;
     unk_D_86002F34_00C* ptr;
-    unk_D_86002F58_004_000* ptr2;
+    DisplayObject* ptr2;
     s32 i;
 
     D_84B1A598.unk_0001 = 0;

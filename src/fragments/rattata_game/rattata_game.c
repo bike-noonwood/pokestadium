@@ -143,8 +143,8 @@ static s32 D_86203E48;
 static s16 D_86203E4C;
 static RattataRacer D_86203E50[4];
 static RattataRacer* D_86204590;
-static unk_D_86002F58_004_000* D_86204594;
-static unk_D_86002F58_004_000 D_86204598;
+static DisplayObject* D_86204594;
+static DisplayObject D_86204598;
 static s16 D_86204700;
 static u32 D_86204704;
 static s16 D_86204708;
@@ -665,7 +665,7 @@ void RattataGame_UpdateRunAnimSpeed(RattataRacer* arg0) {
 }
 
 void RattataGame_SetRacerAnimState(RattataRacer* arg0, s32 arg1) {
-    unk_D_86002F58_004_000* temp_s0 = &arg0->unk_008;
+    DisplayObject* temp_s0 = &arg0->unk_008;
 
     switch (arg1) {
         case 3:
@@ -700,7 +700,7 @@ void RattataGame_UpdateHurdleMarkers(RattataRacer* arg0) {
     s32 i;
     f32 temp_fs1;
     u32 temp_v0;
-    unk_D_86002F58_004_000* temp_s1;
+    DisplayObject* temp_s1;
     s32 arg0_unk000 = arg0->unk_000;
     f32 unk_190;
 
@@ -968,7 +968,7 @@ void RattataGame_MainLoop(void) {
     s32 j;
     s16 temp_s1_2;
     s16 var_s3;
-    unk_D_86002F58_004_000* var_s2;
+    DisplayObject* var_s2;
     RattataRacer* temp_s1;
     s16 var_v0_2;
     s16 sp8C;
@@ -1270,7 +1270,7 @@ void RattataGame_LoadAssets(void) {
     s32 i;
     s32 j;
     MemoryBlock* temp_v0 = MainPool_AllocState(main_pool_get_available(), 0);
-    unk_D_86002F58_004_000* temp_s0;
+    DisplayObject* temp_s0;
 
     D_86203E38 = process_geo_layout(temp_v0, &D_86203D0C);
     MainPool_FinalizeAllocation(temp_v0);
@@ -1328,7 +1328,7 @@ void RattataGame_LoadAssets(void) {
 void RattataGame_InitPlayerSlots(void) {
     s32 i;
     s32 j;
-    unk_D_86002F58_004_000* temp_s0;
+    DisplayObject* temp_s0;
 
     D_86208298 = 0;
     D_8620470A = 0;

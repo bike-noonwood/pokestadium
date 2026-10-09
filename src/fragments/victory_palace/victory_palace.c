@@ -26,7 +26,7 @@
 typedef struct unk_D_82607420 {
     /* 0x000 */ s32 unk_000;
     /* 0x004 */ unk_D_86002F58_004_000_010_024* unk_004;
-    /* 0x008 */ unk_D_86002F58_004_000 unk_008;
+    /* 0x008 */ DisplayObject unk_008;
 } unk_D_82607420; // size = 0x170
 
 typedef struct unk_D_82604180 {
@@ -46,9 +46,9 @@ static s16 D_82607B50;
 static s16 D_82607B52;
 static s16 D_82607B54;
 static s32 pad_D_82607B58[2];
-static unk_D_86002F58_004_000 D_82607B60[5];
-static unk_D_86002F58_004_000 D_82608268;
-static unk_D_86002F58_004_000 D_826083D0;
+static DisplayObject D_82607B60[5];
+static DisplayObject D_82608268;
+static DisplayObject D_826083D0;
 static unk_D_86002F30* D_82608538;
 static s16 D_8260853C;
 static s16 D_8260853E;
@@ -2571,7 +2571,7 @@ void HallOfFame_RunGallery(void) {
 
 void HallOfFame_SpawnPokeIcon(s32 arg0, f32 arg1) {
     if ((D_82607420[arg0].unk_000 != 151) || (VictoryPalace_SpeciesObtained(151) != 0)) {
-        unk_D_86002F58_004_000* temp_s0 = &D_82607B60[arg0];
+        DisplayObject* temp_s0 = &D_82607B60[arg0];
 
         temp_s0->unk_0A6 = arg0;
         Model_InitDisplayObject(temp_s0, 0, 0xB6, D_82608538->unk_08->unk_00[0]);
@@ -2595,7 +2595,7 @@ void HallOfFame_InitGallery(void) {
     s16 j;
     MemoryBlock* temp_v0;
     unk_D_86002F30* temp_s0;
-    unk_D_86002F58_004_000* ptr;
+    DisplayObject* ptr;
 
     D_82608546 = 0;
     D_82608548 = 0;

@@ -149,7 +149,7 @@ void BattlePrep_UpdateTrophyModel(unk_D_84B26640_010* arg0) {
     }
 }
 
-void BattlePrep_StartTrophyModelGrow(unk_D_84B26640_010* arg0, unk_D_86002F58_004_000* arg1) {
+void BattlePrep_StartTrophyModelGrow(unk_D_84B26640_010* arg0, DisplayObject* arg1) {
     arg0->unk_04 = arg1;
     arg0->unk_01 = 0;
     arg0->unk_00 = 2;

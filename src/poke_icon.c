@@ -12,7 +12,7 @@
 #include "src/geo_layout.h"
 #include "src/memory.h"
 
-static unk_D_86002F58_004_000* D_800AC830;
+static DisplayObject* D_800AC830;
 static s32 D_800AC834;
 
 s32 PokeIcon_CapturePreviewGeoNode(s32, GraphNode*);

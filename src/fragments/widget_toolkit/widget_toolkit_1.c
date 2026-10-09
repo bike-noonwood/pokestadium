@@ -31,7 +31,7 @@ static s16 D_8780FAC0;
 static s16 D_8780FAC2;
 static s16 D_8780FAC4;
 static s16 D_8780FAC6;
-static unk_D_86002F58_004_000 D_8780FAC8;
+static DisplayObject D_8780FAC8;
 static unk_func_80011B94* D_8780FC30;
 
 void Widget_CountdownComputeScale(s16 arg0, s16 arg1, f32* arg2, f32* arg3) {

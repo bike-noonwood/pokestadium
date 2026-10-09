@@ -35,13 +35,13 @@ void ModelAnim_ResetCurveContext(void);
 void ModelAnim_BeginCurveContext(unk_D_86002F58_004_000_040* arg0, u16 arg1, s32 arg2);
 void ModelAnim_EndCurveContext(void);
 void ModelAnim_EvaluateJointTransform(Vec3f* arg0, Vec3s* arg1, Vec3f* arg2, s32 arg3);
-void ModelAnim_ClearTransformChannel(unk_D_86002F58_004_000* arg0);
-s32 ModelAnim_BindTransformCurve(unk_D_86002F58_004_000* arg0, s16 arg1, void* arg2, s32 arg3);
-s32 ModelAnim_SetSpeed(unk_D_86002F58_004_000* arg0, s32 arg1);
-void ModelAnim_SetFrame(unk_D_86002F58_004_000* arg0, s16 arg1);
-s32 ModelAnim_HasCrossedFrame(unk_D_86002F58_004_000* arg0, s16 arg1);
-s32 ModelAnim_IsAnimationDone(unk_D_86002F58_004_000* arg0);
-s32 ModelAnim_IsFinished(unk_D_86002F58_004_000* arg0);
+void ModelAnim_ClearTransformChannel(DisplayObject* arg0);
+s32 ModelAnim_BindTransformCurve(DisplayObject* arg0, s16 arg1, void* arg2, s32 arg3);
+s32 ModelAnim_SetSpeed(DisplayObject* arg0, s32 arg1);
+void ModelAnim_SetFrame(DisplayObject* arg0, s16 arg1);
+s32 ModelAnim_HasCrossedFrame(DisplayObject* arg0, s16 arg1);
+s32 ModelAnim_IsAnimationDone(DisplayObject* arg0);
+s32 ModelAnim_IsFinished(DisplayObject* arg0);
 
 
 #endif // _17300_H_

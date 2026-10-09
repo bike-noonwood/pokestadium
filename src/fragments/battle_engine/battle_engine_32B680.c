@@ -1548,7 +1548,7 @@ void BattleAnim_CallbackStartEffect125ModelBurstEmitter(Particle* arg0) {
 }
 
 void BattleAnim_BuildEffect125DisplayList(Gfx* arg0, u16 arg1) {
-    unk_D_86002F58_004_000* tmp = D_8006F09C;
+    DisplayObject* tmp = D_8006F09C;
 
     gDPPipeSync(arg0++);
 
@@ -3608,7 +3608,7 @@ void func_84349F80(s32 arg0, arg1_func_84344CE8* arg1) {
 }
 
 void func_84349FC8(Gfx* arg0, UNUSED arg1_func_8434E21C* arg1, UNUSED u16 arg2) {
-    unk_D_86002F58_004_000* sp24 = D_8006F09C;
+    DisplayObject* sp24 = D_8006F09C;
     s32 tmp = BattleAnim_GetOwnerContextParticle(D_8006F09C);
     UNUSED u8 sp1F;
     UNUSED u8 sp1E;

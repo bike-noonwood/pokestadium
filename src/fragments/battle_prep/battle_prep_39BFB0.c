@@ -1102,7 +1102,7 @@ void BattlePrepTeamIcons_Load(unk_D_84B25A58* arg0, BinArchive* arg1) {
     arg0->unk_00 = 1;
 }
 
-s32 BattlePrepTeamIcons_InitDisplayObjects(unk_D_84B25A58* arg0, unk_D_86002F58_004_000* arg1) {
+s32 BattlePrepTeamIcons_InitDisplayObjects(unk_D_84B25A58* arg0, DisplayObject* arg1) {
     if (arg0->unk_00 == 2) {
         arg0->unk_00 = 3;
         arg0->unk_04 = arg1;

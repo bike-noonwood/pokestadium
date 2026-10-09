@@ -58,9 +58,9 @@ static u32 D_8640290C[] = {
     0x06000000, 0x06000000, 0x06000000, 0x03000000, 0x87806398, 0x06000000, 0x01000000,
 };
 
-static unk_D_86002F58_004_000 D_86404070;
+static DisplayObject D_86404070;
 
-static unk_D_86002F58_004_000 D_864041D8[4];
+static DisplayObject D_864041D8[4];
 
 static unk_D_86404778 D_86404778[4];
 
@@ -68,7 +68,7 @@ static unk_D_86405158 D_86405158;
 
 static unk_D_86404778* D_864052C8;
 static unk_D_86405158* D_864052CC;
-static unk_D_86002F58_004_000* D_864052D0;
+static DisplayObject* D_864052D0;
 static u8 D_864052D4;
 static s16 D_864052D6;
 

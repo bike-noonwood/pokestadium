@@ -1,14 +1,14 @@
 #include "demo_scenes.h"
 #include "src/matrix.h"
 
-u16 Diorama_IsModelInCameraCone(unk_D_86002F34_00C* arg0, unk_D_86002F58_004_000* arg1, s16 arg2, s16 arg3, f32 arg4, f32 arg5) {
+u16 Diorama_IsModelInCameraCone(unk_D_86002F34_00C* arg0, DisplayObject* arg1, s16 arg2, s16 arg3, f32 arg4, f32 arg5) {
     UNUSED s32 pad[6];
     f32 sp6C;
     f32 sp68;
     f32 sp64;
     f32 sp60;
     f32 sp5C;
-    unk_D_86002F58_004_000* arg11;
+    DisplayObject* arg11;
     f32 sp54;
     f32 sp50;
     UNUSED s32 pad3;
